@@ -1,0 +1,136 @@
+from __future__ import annotations
+
+import random
+from collections import Counter
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import torch
+from nltk.tokenize import word_tokenize
+from torch.utils.data import Dataset
+
+
+PAD = "<pad>"
+UNK = "<unk>"
+
+
+def set_seed(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+def tokenize(text: str) -> list[str]:
+    if not isinstance(text, str):
+        return []
+    return word_tokenize(text.strip())
+
+
+def build_vocab(
+    texts: list[str],
+    min_freq: int = 2,
+) -> tuple[dict[str, int], dict[int, str]]:
+    cnt = Counter()
+    for t in texts:
+        cnt.update(tokenize(t))
+    word2idx: dict[str, int] = {PAD: 0, UNK: 1}
+    for w, c in cnt.items():
+        if c >= min_freq:
+            word2idx[w] = len(word2idx)
+    idx2word = {i: w for w, i in word2idx.items()}
+    return word2idx, idx2word
+
+
+def encode_texts(
+    texts: list[str],
+    word2idx: dict[str, int],
+    max_len: int,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    unk = word2idx[UNK]
+    pad = word2idx[PAD]
+    batch_ids: list[list[int]] = []
+    batch_lens: list[int] = []
+    for t in texts:
+        ids = [word2idx.get(w, unk) for w in tokenize(t)]
+        if len(ids) > max_len:
+            ids = ids[:max_len]
+        batch_lens.append(len(ids) if ids else 1)
+        while len(ids) < max_len:
+            ids.append(pad)
+        batch_ids.append(ids[:max_len])
+    x = torch.tensor(batch_ids, dtype=torch.long)
+    lens = torch.tensor(batch_lens, dtype=torch.long)
+    return x, lens
+
+
+class TextClassificationDataset(Dataset):
+    def __init__(
+        self,
+        texts: list[str],
+        labels: list[int],
+        word2idx: dict[str, int],
+        max_len: int,
+    ):
+        self.texts = texts
+        self.labels = labels
+        self.word2idx = word2idx
+        self.max_len = max_len
+
+    def __len__(self) -> int:
+        return len(self.texts)
+
+    def __getitem__(self, idx: int):
+        t = self.texts[idx]
+        y = self.labels[idx]
+        x, lens = encode_texts([t], self.word2idx, self.max_len)
+        return x.squeeze(0), lens.squeeze(0), torch.tensor(y, dtype=torch.long)
+
+
+def collate_batch(batch):
+    xs = torch.stack([b[0] for b in batch], dim=0)
+    lens = torch.stack([b[1] for b in batch], dim=0)
+    ys = torch.stack([b[2] for b in batch], dim=0)
+    return xs, lens, ys
+
+
+def load_glove_embeddings(
+    glove_path: str | Path,
+    word2idx: dict[str, int],
+    embed_dim: int,
+) -> torch.Tensor:
+    path = Path(glove_path)
+    n = len(word2idx)
+    mat = np.random.uniform(-0.25, 0.25, (n, embed_dim)).astype(np.float32)
+    mat[0] = 0.0
+    with path.open(encoding="utf-8", errors="ignore") as f:
+        for line in f:
+            parts = line.rstrip().split()
+            if len(parts) != embed_dim + 1:
+                continue
+            w = parts[0]
+            if w not in word2idx:
+                continue
+            mat[word2idx[w]] = np.asarray(parts[1:], dtype=np.float32)
+    return torch.from_numpy(mat)
+
+
+def load_csv_split(path: str | Path) -> tuple[list[str], list[str]]:
+    df = pd.read_csv(path, encoding="utf-8")
+    text_col = "text" if "text" in df.columns else df.columns[0]
+    label_col = "label" if "label" in df.columns else df.columns[1]
+    texts = df[text_col].fillna("").astype(str).tolist()
+    labels = df[label_col].astype(str).str.strip().tolist()
+    return texts, labels
+
+
+def build_label_maps(label_order: list[str]) -> tuple[dict[str, int], dict[int, str]]:
+    str2id = {s: i for i, s in enumerate(label_order)}
+    id2str = {i: s for s, i in str2id.items()}
+    return str2id, id2str
+
+
+def labels_to_ids(raw: list[str], str2id: dict[str, int]) -> list[int]:
+    return [str2id[x] for x in raw]
