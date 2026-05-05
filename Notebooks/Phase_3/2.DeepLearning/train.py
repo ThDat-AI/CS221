@@ -74,7 +74,6 @@ def make_args(model: str, **overrides: object) -> argparse.Namespace:
         checkpoint_dir="",
         checkpoint_every_n_epochs=0,
         checkpoint_on_improve=True,
-        max_checkpoints=5,
     )
     defaults.update(overrides)
     return argparse.Namespace(**defaults)
@@ -111,7 +110,6 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--checkpoint_dir", type=str, default="")
     p.add_argument("--checkpoint_every_n_epochs", type=int, default=0)
     p.add_argument("--no_checkpoint_on_improve", action="store_true")
-    p.add_argument("--max_checkpoints", type=int, default=5)
     ns = p.parse_args()
     ns.use_tqdm = not ns.no_tqdm
     ns.log_train_metric_each_epoch = not ns.no_log_train_metric
@@ -160,15 +158,6 @@ def _maybe_tqdm(it, use: bool, total: int | None, desc: str):
         return tqdm(it, total=total, desc=desc, leave=False)
     except ImportError:
         return it
-
-
-def _prune_queue(paths: list[Path], max_keep: int) -> None:
-    if max_keep <= 0:
-        return
-    while len(paths) > max_keep:
-        old = paths.pop(0)
-        if old.exists():
-            old.unlink()
 
 
 def _save_ckpt_state(
@@ -305,8 +294,6 @@ def run_training(args: argparse.Namespace) -> None:
     ckpt_root = Path(args.checkpoint_dir) if args.checkpoint_dir else out_dir / "checkpoints"
     ckpt_root.mkdir(parents=True, exist_ok=True)
 
-    rolling_paths: list[Path] = []
-
     train_start = time.perf_counter()
     best_f1 = -1.0
     patience_left = args.early_stop_patience
@@ -378,8 +365,6 @@ def run_training(args: argparse.Namespace) -> None:
                 val_f1,
                 train_f1_epoch,
             )
-            rolling_paths.append(dest)
-            _prune_queue(rolling_paths, args.max_checkpoints)
 
         if improved and best_state is not None:
             best_path = ckpt_root / f"{args.model}_best.pt"
@@ -403,8 +388,6 @@ def run_training(args: argparse.Namespace) -> None:
                     val_f1,
                     train_f1_epoch,
                 )
-                rolling_paths.append(dest)
-                _prune_queue(rolling_paths, args.max_checkpoints)
 
         if patience_left <= 0:
             print(f"[early stopping] at epoch {epoch + 1}", flush=True)
