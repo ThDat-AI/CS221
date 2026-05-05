@@ -61,7 +61,9 @@ class BiLSTMAttention(nn.Module):
             enforce_sorted=False,
         )
         out, _ = self.lstm(packed)
-        out, _ = nn.utils.rnn.pad_packed_sequence(out, batch_first=True)
+        out, _ = nn.utils.rnn.pad_packed_sequence(
+            out, batch_first=True, total_length=x.size(1)
+        )
         mask = x != self.embedding.padding_idx
         ctx = self.attn(out, mask)
         ctx = self.dropout(ctx)
