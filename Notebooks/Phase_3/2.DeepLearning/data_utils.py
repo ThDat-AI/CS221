@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -13,6 +14,41 @@ from torch.utils.data import Dataset
 
 PAD = "<pad>"
 UNK = "<unk>"
+_URL_TOK = "URLPLACEHOLDER"
+_USER_TOK = "USERPLACEHOLDER"
+_NAME_TOK = "NAMEPLACEHOLDER"
+_NUMBER_TOK = "NUMBERPLACEHOLDER"
+
+_DEMOJIZE_COLON_BLOCK = re.compile(r":([-+a-zA-Z0-9][-a-zA-Z0-9_]*):")
+
+
+def expand_demojized_tokens(text: str) -> str:
+    if not isinstance(text, str) or not text:
+        return text if isinstance(text, str) else ""
+
+    def repl(m: re.Match[str]) -> str:
+        inner = m.group(1)
+        if inner.isdigit():
+            return m.group(0)
+        phrase = inner.replace("_", " ").strip()
+        if not phrase:
+            return m.group(0)
+        return f" {phrase} "
+
+    t = _DEMOJIZE_COLON_BLOCK.sub(repl, text)
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def normalize_placeholder_tokens(text: str) -> str:
+    if not isinstance(text, str):
+        return ""
+    t = text
+    t = re.sub(r"<username>", f" {_USER_TOK} ", t, flags=re.I)
+    t = re.sub(r"<url>", f" {_URL_TOK} ", t, flags=re.I)
+    t = re.sub(r"<name>", f" {_NAME_TOK} ", t, flags=re.I)
+    t = re.sub(r"<number>", f" {_NUMBER_TOK} ", t, flags=re.I)
+    t = re.sub(r"\s+", " ", t).strip()
+    return t
 
 
 def set_seed(seed: int) -> None:
@@ -26,7 +62,9 @@ def set_seed(seed: int) -> None:
 def tokenize(text: str) -> list[str]:
     if not isinstance(text, str):
         return []
-    return word_tokenize(text.strip())
+    t = normalize_placeholder_tokens(text.strip())
+    t = expand_demojized_tokens(t)
+    return word_tokenize(t)
 
 
 def build_vocab(
