@@ -9,7 +9,7 @@ import nltk
 import numpy as np
 import torch
 import torch.nn as nn
-from sklearn.metrics import classification_report, f1_score
+from sklearn.metrics import classification_report, confusion_matrix, f1_score
 from torch.utils.data import DataLoader
 
 from data_utils import (
@@ -58,6 +58,7 @@ def make_args(model: str, **overrides: object) -> argparse.Namespace:
         batch_size=32,
         epochs=40,
         lr=1e-3,
+        weight_decay=0.01,
         dropout=0.4,
         num_filters=128,
         early_stop_patience=6,
@@ -74,6 +75,7 @@ def make_args(model: str, **overrides: object) -> argparse.Namespace:
         checkpoint_dir="",
         checkpoint_every_n_epochs=0,
         checkpoint_on_improve=True,
+        save_plots=True,
     )
     defaults.update(overrides)
     return argparse.Namespace(**defaults)
@@ -94,6 +96,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--batch_size", type=int, default=32)
     p.add_argument("--epochs", type=int, default=40)
     p.add_argument("--lr", type=float, default=1e-3)
+    p.add_argument("--weight_decay", type=float, default=0.01)
     p.add_argument("--dropout", type=float, default=0.4)
     p.add_argument("--num_filters", type=int, default=128)
     p.add_argument("--early_stop_patience", type=int, default=6)
@@ -110,10 +113,12 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--checkpoint_dir", type=str, default="")
     p.add_argument("--checkpoint_every_n_epochs", type=int, default=0)
     p.add_argument("--no_checkpoint_on_improve", action="store_true")
+    p.add_argument("--no_save_plots", action="store_true")
     ns = p.parse_args()
     ns.use_tqdm = not ns.no_tqdm
     ns.log_train_metric_each_epoch = not ns.no_log_train_metric
     ns.checkpoint_on_improve = not ns.no_checkpoint_on_improve
+    ns.save_plots = not ns.no_save_plots
     return ns
 
 
@@ -179,6 +184,115 @@ def _save_ckpt_state(
         "args": vars(args),
     }
     torch.save(payload, path)
+
+
+def _save_training_visualizations(
+    out_dir: Path,
+    model_name: str,
+    history: dict[str, list],
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    class_names: list[str],
+) -> None:
+    plots_dir = out_dir / "plots"
+    plots_dir.mkdir(parents=True, exist_ok=True)
+    hist_json: dict[str, list] = {}
+    for k, v in history.items():
+        row: list = []
+        for x in v:
+            if isinstance(x, float) and np.isnan(x):
+                row.append(None)
+            elif isinstance(x, np.floating):
+                row.append(float(x))
+            elif isinstance(x, np.integer):
+                row.append(int(x))
+            else:
+                row.append(x)
+        hist_json[k] = row
+    with (out_dir / f"{model_name}_history.json").open("w", encoding="utf-8") as f:
+        json.dump(hist_json, f, indent=2)
+
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        print("[plots] matplotlib not installed; skipped plots/history json kept", flush=True)
+        return
+
+    epochs = history["epoch"]
+    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=True)
+    axes[0].plot(epochs, history["train_loss"], color="C0")
+    axes[0].set_ylabel("train loss")
+    axes[0].grid(True, alpha=0.3)
+    axes[1].plot(epochs, history["val_macro_f1"], label="val macro F1", color="C1")
+    tmf = history.get("train_macro_f1", [])
+    if tmf and not all(
+        x is None or (isinstance(x, float) and np.isnan(x)) for x in tmf
+    ):
+        plot_tf = [
+            np.nan if x is None or (isinstance(x, float) and np.isnan(x)) else float(x)
+            for x in tmf
+        ]
+        axes[1].plot(epochs, plot_tf, label="train macro F1", color="C0")
+    axes[1].set_ylabel("macro F1")
+    axes[1].legend(loc="lower right")
+    axes[1].grid(True, alpha=0.3)
+    axes[2].plot(epochs, history["lr"], color="C2")
+    axes[2].set_xlabel("epoch")
+    axes[2].set_ylabel("learning rate")
+    axes[2].grid(True, alpha=0.3)
+    fig.suptitle(f"{model_name} training")
+    fig.tight_layout()
+    fig.savefig(plots_dir / f"{model_name}_learning_curves.png", dpi=150)
+    plt.close(fig)
+
+    cm = confusion_matrix(y_true, y_pred, labels=list(range(len(class_names))))
+    row_sum = cm.sum(axis=1, keepdims=True)
+    cm_n = cm.astype(np.float64) / np.maximum(row_sum.astype(np.float64), 1.0)
+
+    fig2, ax = plt.subplots(figsize=(6.2, 5))
+    im = ax.imshow(cm_n, interpolation="nearest", cmap="Blues", vmin=0, vmax=1)
+    ax.set_xticks(range(len(class_names)))
+    ax.set_yticks(range(len(class_names)))
+    ax.set_xticklabels(class_names, rotation=45, ha="right")
+    ax.set_yticklabels(class_names)
+    ax.set_ylabel("true label")
+    ax.set_xlabel("predicted label")
+    for i in range(len(class_names)):
+        for j in range(len(class_names)):
+            ax.text(
+                j,
+                i,
+                f"{cm[i, j]}\n({cm_n[i, j]:.0%})",
+                ha="center",
+                va="center",
+                fontsize=8,
+            )
+    fig2.colorbar(im, ax=ax, fraction=0.046, label="row-normalized")
+    fig2.tight_layout()
+    fig2.savefig(plots_dir / f"{model_name}_confusion_matrix_test.png", dpi=150)
+    plt.close(fig2)
+
+    f1s = f1_score(
+        y_true,
+        y_pred,
+        average=None,
+        labels=list(range(len(class_names))),
+        zero_division=0,
+    )
+    fig3, ax3 = plt.subplots(figsize=(6.5, 3.8))
+    ax3.bar(class_names, f1s, color="steelblue")
+    ax3.set_ylabel("F1 (test)")
+    ax3.set_ylim(0, 1.05)
+    ax3.grid(True, axis="y", alpha=0.3)
+    for i, v in enumerate(f1s):
+        ax3.text(i, min(v + 0.03, 1.0), f"{v:.3f}", ha="center", fontsize=9)
+    fig3.tight_layout()
+    fig3.savefig(plots_dir / f"{model_name}_per_class_f1_test.png", dpi=150)
+    plt.close(fig3)
+    print(f"[plots] saved under {plots_dir}", flush=True)
 
 
 def run_training(args: argparse.Namespace) -> None:
@@ -255,7 +369,9 @@ def run_training(args: argparse.Namespace) -> None:
         w = torch.tensor(DEFAULT_CLASS_WEIGHTS, dtype=torch.float32, device=device)
         crit = nn.CrossEntropyLoss(weight=w)
 
-    opt = torch.optim.Adam(model.parameters(), lr=args.lr)
+    opt = torch.optim.AdamW(
+        model.parameters(), lr=args.lr, weight_decay=args.weight_decay
+    )
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(
         opt,
         mode="max",
@@ -298,6 +414,11 @@ def run_training(args: argparse.Namespace) -> None:
     best_f1 = -1.0
     patience_left = args.early_stop_patience
     best_state = None
+    history_epoch: list[int] = []
+    history_loss: list[float] = []
+    history_train_f1: list[float] = []
+    history_val_f1: list[float] = []
+    history_lr: list[float] = []
 
     for epoch in range(args.epochs):
         model.train()
@@ -352,6 +473,15 @@ def run_training(args: argparse.Namespace) -> None:
             f"lr={lr_now:.2e} patience={patience_left}/{args.early_stop_patience}",
             flush=True,
         )
+
+        history_epoch.append(epoch + 1)
+        history_loss.append(avg_loss)
+        history_val_f1.append(val_f1)
+        history_lr.append(lr_now)
+        if train_f1_epoch is not None:
+            history_train_f1.append(float(train_f1_epoch))
+        else:
+            history_train_f1.append(float("nan"))
 
         if args.checkpoint_every_n_epochs > 0 and (epoch + 1) % args.checkpoint_every_n_epochs == 0:
             dest = ckpt_root / f"{args.model}_roll_ep{epoch + 1:04d}_val{val_f1:.4f}.pt"
@@ -486,6 +616,22 @@ def run_training(args: argparse.Namespace) -> None:
         f.write(report_val)
     with (out_dir / f"{args.model}_report_test.txt").open("w", encoding="utf-8") as f:
         f.write(report_test)
+
+    if args.save_plots:
+        _save_training_visualizations(
+            out_dir,
+            args.model,
+            {
+                "epoch": history_epoch,
+                "train_loss": history_loss,
+                "train_macro_f1": history_train_f1,
+                "val_macro_f1": history_val_f1,
+                "lr": history_lr,
+            },
+            y_true_test,
+            y_pred_test,
+            DEFAULT_LABEL_ORDER,
+        )
 
 
 def main() -> None:
