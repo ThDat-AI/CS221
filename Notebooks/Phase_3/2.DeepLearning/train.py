@@ -19,10 +19,17 @@ from data_utils import (
     collate_batch,
     labels_to_ids,
     load_csv_split,
+    load_fasttext_embeddings,
     load_glove_embeddings,
     set_seed,
 )
 from models import BiLSTMAttention, TextCNN
+
+
+_PRETRAINED_LOADERS = {
+    "glove": load_glove_embeddings,
+    "fasttext": load_fasttext_embeddings,
+}
 
 
 DEFAULT_LABEL_ORDER = ["Normal", "Depression", "Suicidal", "Anxiety"]
@@ -50,7 +57,8 @@ def make_args(model: str, **overrides: object) -> argparse.Namespace:
         train_csv=str(clean / "train_clean.csv"),
         val_csv=str(clean / "val_clean.csv"),
         test_csv=str(clean / "test_clean.csv"),
-        glove_path="",
+        pretrained_path="",
+        pretrained_format="glove",
         embed_dim=300,
         hidden_dim=128,
         max_len=256,
@@ -89,6 +97,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--val_csv", type=str, default=str(clean / "val_clean.csv"))
     p.add_argument("--test_csv", type=str, default=str(clean / "test_clean.csv"))
     p.add_argument("--glove_path", type=str, default="")
+    p.add_argument("--pretrained_path", type=str, default="")
+    p.add_argument(
+        "--pretrained_format",
+        type=str,
+        choices=("glove", "fasttext"),
+        default="glove",
+    )
     p.add_argument("--embed_dim", type=int, default=300)
     p.add_argument("--hidden_dim", type=int, default=128)
     p.add_argument("--max_len", type=int, default=256)
@@ -135,8 +150,6 @@ def evaluate(
     model: nn.Module,
     loader: DataLoader,
     device: torch.device,
-    _model_name: str,
-    _num_classes: int,
 ) -> tuple[float, np.ndarray, np.ndarray]:
     model.eval()
     all_y: list[int] = []
@@ -295,6 +308,16 @@ def _save_training_visualizations(
     print(f"[plots] saved under {plots_dir}", flush=True)
 
 
+def _resolve_pretrained_path_and_format(args: argparse.Namespace) -> tuple[str, str]:
+    p = (getattr(args, "pretrained_path", None) or "").strip()
+    if not p:
+        p = (getattr(args, "glove_path", None) or "").strip()
+    fmt = (getattr(args, "pretrained_format", None) or "glove").strip().lower()
+    if fmt not in ("glove", "fasttext"):
+        fmt = "glove"
+    return p, fmt
+
+
 def run_training(args: argparse.Namespace) -> None:
     set_seed(args.seed)
     ensure_nltk()
@@ -309,7 +332,10 @@ def run_training(args: argparse.Namespace) -> None:
     n_val = len(val_texts)
     n_test = len(test_texts)
     print(
-        f"[data] train={n_train} val={n_val} test={n_test} device={device}",
+        f"[data] train={n_train} val={n_val} test={n_test} device={device}\n"
+        f"[data] csv train_csv={args.train_csv}\n"
+        f"[data] csv val_csv={args.val_csv}\n"
+        f"[data] csv test_csv={args.test_csv}",
         flush=True,
     )
 
@@ -334,35 +360,33 @@ def run_training(args: argparse.Namespace) -> None:
     pad_idx = word2idx["<pad>"]
     vocab_size = len(word2idx)
 
-    if args.glove_path:
-        gp = Path(args.glove_path)
-        if gp.is_file():
-            pretrained, gstats = load_glove_embeddings(
-                gp, word2idx, args.embed_dim
-            )
+    pretrained_path_str, pretrained_fmt = _resolve_pretrained_path_and_format(args)
+    if pretrained_path_str:
+        ep = Path(pretrained_path_str)
+        if ep.is_file():
+            loader_fn = _PRETRAINED_LOADERS[pretrained_fmt]
+            pretrained, estats = loader_fn(ep, word2idx, args.embed_dim)
             print(
-                "[glove] OK loaded pretrained embeddings | "
-                f"path={gstats['path']} embed_dim={gstats['embed_dim']} "
-                f"vocab={gstats['vocab_size']} "
-                f"rows_with_glove={gstats['matched_vocab_rows']} "
-                f"coverage={float(gstats['coverage']):.2%}",
-                flush=True,
-            )
-        elif gp.is_dir():
-            pretrained = None
-            print(
-                f"[glove] SKIP path is a directory (need .txt file): {gp}",
+                "[embed] OK loaded pretrained | "
+                f"format={estats['format']} path={estats['path']} "
+                f"embed_dim={estats['embed_dim']} vocab={estats['vocab_size']} "
+                f"matched={estats['matched_vocab_rows']} "
+                f"coverage={float(estats['coverage']):.2%}",
                 flush=True,
             )
         else:
             pretrained = None
+            kind = "directory" if ep.is_dir() else "missing file"
             print(
-                f"[glove] SKIP file not found (using random init): {gp}",
+                f"[embed] SKIP ({kind}, random init): {ep}",
                 flush=True,
             )
     else:
         pretrained = None
-        print("[glove] SKIP glove_path empty (random embedding init)", flush=True)
+        print(
+            "[embed] SKIP pretrained_path/glove_path empty (random init)",
+            flush=True,
+        )
 
     num_classes = len(DEFAULT_LABEL_ORDER)
 
@@ -474,11 +498,9 @@ def run_training(args: argparse.Namespace) -> None:
 
         train_f1_epoch: float | None = None
         if args.log_train_metric_each_epoch:
-            train_f1_epoch, _, _ = evaluate(
-                model, train_loader, device, args.model, num_classes
-            )
+            train_f1_epoch, _, _ = evaluate(model, train_loader, device)
 
-        val_f1, _, _ = evaluate(model, val_loader, device, args.model, num_classes)
+        val_f1, _, _ = evaluate(model, val_loader, device)
         sched.step(val_f1)
 
         lr_now = opt.param_groups[0]["lr"]
@@ -554,31 +576,14 @@ def run_training(args: argparse.Namespace) -> None:
         model.load_state_dict({k: v.to(device) for k, v in best_state.items()})
     model.eval()
 
-    train_f1_final, y_true_train, y_pred_train = evaluate(
-        model, train_loader, device, args.model, num_classes
-    )
-    _, y_true_val, y_pred_val = evaluate(model, val_loader, device, args.model, num_classes)
+    train_f1_final, y_true_train, y_pred_train = evaluate(model, train_loader, device)
+    _, y_true_val, y_pred_val = evaluate(model, val_loader, device)
 
     infer_batches_start = time.perf_counter()
-    with torch.no_grad():
-        infer_it = _maybe_tqdm(
-            test_loader,
-            args.use_tqdm,
-            len(test_loader),
-            "test infer",
-        )
-        for batch in infer_it:
-            x, lens, _ = batch
-            x = x.to(device)
-            lens = lens.to(device)
-            _ = model(x, lens)
+    test_f1, y_true_test, y_pred_test = evaluate(model, test_loader, device)
     infer_total = time.perf_counter() - infer_batches_start
     n_test_n = len(test_ds)
     avg_ms_per_sample = (infer_total / max(n_test_n, 1)) * 1000.0
-
-    test_f1, y_true_test, y_pred_test = evaluate(
-        model, test_loader, device, args.model, num_classes
-    )
 
     report_train = classification_report(
         y_true_train,

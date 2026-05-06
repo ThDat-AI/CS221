@@ -3,6 +3,7 @@ from __future__ import annotations
 import random
 import re
 from collections import Counter
+from itertools import chain
 from pathlib import Path
 
 import numpy as np
@@ -87,8 +88,8 @@ def encode_texts(
     word2idx: dict[str, int],
     max_len: int,
 ) -> tuple[torch.Tensor, torch.Tensor]:
-    unk = word2idx[UNK]
-    pad = word2idx[PAD]
+    unk = word2idx["<unk>"]
+    pad = word2idx["<pad>"]
     batch_ids: list[list[int]] = []
     batch_lens: list[int] = []
     for t in texts:
@@ -160,10 +161,74 @@ def load_glove_embeddings(
     matched = len(hit_indices)
     stats: dict[str, float | int | str] = {
         "path": str(path.resolve()),
+        "format": "glove",
         "embed_dim": embed_dim,
         "vocab_size": n,
         "matched_vocab_rows": matched,
-        "glove_rows_used": applied,
+        "lines_used": applied,
+        "coverage": float(matched / max(n, 1)),
+    }
+    return torch.from_numpy(mat), stats
+
+
+def load_fasttext_embeddings(
+    ft_path: str | Path,
+    word2idx: dict[str, int],
+    embed_dim: int,
+) -> tuple[torch.Tensor, dict[str, float | int | str]]:
+    path = Path(ft_path)
+    n = len(word2idx)
+    mat = np.random.uniform(-0.25, 0.25, (n, embed_dim)).astype(np.float32)
+    mat[0] = 0.0
+    hit_indices: set[int] = set()
+    applied = 0
+    with path.open(encoding="utf-8", errors="ignore") as f:
+        first = f.readline()
+        if not first:
+            stats: dict[str, float | int | str] = {
+                "path": str(path.resolve()),
+                "format": "fasttext",
+                "embed_dim": embed_dim,
+                "vocab_size": n,
+                "matched_vocab_rows": 0,
+                "lines_used": 0,
+                "coverage": 0.0,
+            }
+            return torch.from_numpy(mat), stats
+        parts0 = first.rstrip().split()
+        skip_header = (
+            len(parts0) == 2
+            and parts0[0].isdigit()
+            and parts0[1].isdigit()
+        )
+        if skip_header:
+            header_dim = int(parts0[1])
+            if header_dim != embed_dim:
+                raise ValueError(
+                    f"FastText file declares dim={header_dim} but embed_dim={embed_dim}"
+                )
+            line_iter = f
+        else:
+            line_iter = chain([first], f)
+        for line in line_iter:
+            parts = line.rstrip().split()
+            if len(parts) != embed_dim + 1:
+                continue
+            w = parts[0]
+            if w not in word2idx:
+                continue
+            idx = word2idx[w]
+            mat[idx] = np.asarray(parts[1:], dtype=np.float32)
+            hit_indices.add(idx)
+            applied += 1
+    matched = len(hit_indices)
+    stats = {
+        "path": str(path.resolve()),
+        "format": "fasttext",
+        "embed_dim": embed_dim,
+        "vocab_size": n,
+        "matched_vocab_rows": matched,
+        "lines_used": applied,
         "coverage": float(matched / max(n, 1)),
     }
     return torch.from_numpy(mat), stats
