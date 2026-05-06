@@ -100,11 +100,13 @@ def load_glove_embeddings(
     glove_path: str | Path,
     word2idx: dict[str, int],
     embed_dim: int,
-) -> torch.Tensor:
+) -> tuple[torch.Tensor, dict[str, float | int | str]]:
     path = Path(glove_path)
     n = len(word2idx)
     mat = np.random.uniform(-0.25, 0.25, (n, embed_dim)).astype(np.float32)
     mat[0] = 0.0
+    hit_indices: set[int] = set()
+    applied = 0
     with path.open(encoding="utf-8", errors="ignore") as f:
         for line in f:
             parts = line.rstrip().split()
@@ -113,8 +115,20 @@ def load_glove_embeddings(
             w = parts[0]
             if w not in word2idx:
                 continue
-            mat[word2idx[w]] = np.asarray(parts[1:], dtype=np.float32)
-    return torch.from_numpy(mat)
+            idx = word2idx[w]
+            mat[idx] = np.asarray(parts[1:], dtype=np.float32)
+            hit_indices.add(idx)
+            applied += 1
+    matched = len(hit_indices)
+    stats: dict[str, float | int | str] = {
+        "path": str(path.resolve()),
+        "embed_dim": embed_dim,
+        "vocab_size": n,
+        "matched_vocab_rows": matched,
+        "glove_rows_used": applied,
+        "coverage": float(matched / max(n, 1)),
+    }
+    return torch.from_numpy(mat), stats
 
 
 def load_csv_split(path: str | Path) -> tuple[list[str], list[str]]:

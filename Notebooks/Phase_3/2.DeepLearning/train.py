@@ -334,10 +334,35 @@ def run_training(args: argparse.Namespace) -> None:
     pad_idx = word2idx["<pad>"]
     vocab_size = len(word2idx)
 
-    if args.glove_path and Path(args.glove_path).exists():
-        pretrained = load_glove_embeddings(args.glove_path, word2idx, args.embed_dim)
+    if args.glove_path:
+        gp = Path(args.glove_path)
+        if gp.is_file():
+            pretrained, gstats = load_glove_embeddings(
+                gp, word2idx, args.embed_dim
+            )
+            print(
+                "[glove] OK loaded pretrained embeddings | "
+                f"path={gstats['path']} embed_dim={gstats['embed_dim']} "
+                f"vocab={gstats['vocab_size']} "
+                f"rows_with_glove={gstats['matched_vocab_rows']} "
+                f"coverage={float(gstats['coverage']):.2%}",
+                flush=True,
+            )
+        elif gp.is_dir():
+            pretrained = None
+            print(
+                f"[glove] SKIP path is a directory (need .txt file): {gp}",
+                flush=True,
+            )
+        else:
+            pretrained = None
+            print(
+                f"[glove] SKIP file not found (using random init): {gp}",
+                flush=True,
+            )
     else:
         pretrained = None
+        print("[glove] SKIP glove_path empty (random embedding init)", flush=True)
 
     num_classes = len(DEFAULT_LABEL_ORDER)
 
