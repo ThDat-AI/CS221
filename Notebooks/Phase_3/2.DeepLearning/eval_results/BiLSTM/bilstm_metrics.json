@@ -1,0 +1,12 @@
+{
+  "model": "bilstm",
+  "best_val_macro_f1": 0.8117019112594108,
+  "train_macro_f1_final": 0.8534007461407407,
+  "val_macro_f1_final": 0.8117019112594108,
+  "test_macro_f1": 0.8139457222939985,
+  "train_seconds": 511.27690889200005,
+  "test_inference_seconds_total": 4.892074071000025,
+  "test_avg_ms_per_sample": 0.6597537519892144,
+  "num_test_samples": 7415,
+  "epochs_run": 8
+}
