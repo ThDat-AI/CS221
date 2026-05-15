@@ -182,6 +182,32 @@ def load_fasttext_embeddings(
     mat[0] = 0.0
     hit_indices: set[int] = set()
     applied = 0
+
+    if path.suffix == ".bin":
+        import fasttext
+        fasttext.FastText.eprint = lambda x: None
+        model = fasttext.load_model(str(path))
+        if model.get_dimension() != embed_dim:
+            raise ValueError(f"FastText file declares dim={model.get_dimension()} but embed_dim={embed_dim}")
+        
+        for w, idx in word2idx.items():
+            if idx == 0:
+                continue
+            mat[idx] = model.get_word_vector(w)
+            hit_indices.add(idx)
+            applied += 1
+            
+        stats = {
+            "path": str(path.resolve()),
+            "format": "fasttext-bin",
+            "embed_dim": embed_dim,
+            "vocab_size": n,
+            "matched_vocab_rows": applied,
+            "lines_used": applied,
+            "coverage": 1.0,
+        }
+        return torch.from_numpy(mat), stats
+
     with path.open(encoding="utf-8", errors="ignore") as f:
         first = f.readline()
         if not first:
