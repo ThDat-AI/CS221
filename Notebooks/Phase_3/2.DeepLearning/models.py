@@ -31,7 +31,7 @@ class BiLSTMAttention(nn.Module):
         if pretrained_embedding is not None:
             self.embedding = nn.Embedding.from_pretrained(
                 pretrained_embedding,
-                freeze=True,
+                freeze=False,
                 padding_idx=padding_idx,
             )
         else:
@@ -84,7 +84,7 @@ class TextCNN(nn.Module):
         if pretrained_embedding is not None:
             self.embedding = nn.Embedding.from_pretrained(
                 pretrained_embedding,
-                freeze=True,
+                freeze=False,
                 padding_idx=padding_idx,
             )
         else:
