@@ -418,7 +418,7 @@ def run_training(args: argparse.Namespace) -> None:
         w = torch.tensor(DEFAULT_CLASS_WEIGHTS, dtype=torch.float32, device=device)
         crit = nn.CrossEntropyLoss(weight=w)
 
-    opt = torch.optim.AdamW(
+    opt = torch.optim.Adam(
         model.parameters(), lr=args.lr, weight_decay=args.weight_decay
     )
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(
