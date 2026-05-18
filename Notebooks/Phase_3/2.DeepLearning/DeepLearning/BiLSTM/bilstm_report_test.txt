@@ -1,0 +1,10 @@
+              precision    recall  f1-score   support
+
+      Normal     0.9522    0.9368    0.9445      2723
+  Depression     0.7965    0.7284    0.7609      2176
+    Suicidal     0.7152    0.7952    0.7531      1680
+     Anxiety     0.8405    0.8828    0.8611       836
+
+    accuracy                         0.8375      7415
+   macro avg     0.8261    0.8358    0.8299      7415
+weighted avg     0.8402    0.8375    0.8379      7415

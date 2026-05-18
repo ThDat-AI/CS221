@@ -3,3 +3,6 @@ __pycache__/
 *.pt
 results/
 model.zip
+
+*.safetensors
+*.pt

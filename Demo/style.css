@@ -1,0 +1,331 @@
+:root {
+    --bg-color: #f4f0eb; /* Màu beige sáng nhẹ nhàng, giảm sắc xanh/xám */
+    --text-color: #111;
+    --border-color: #111;
+    
+    /* Neo-brutalism Palette - Balanced Colors */
+    --accent-red: #ff3c38;
+    --accent-yellow: #ffca3a;
+    --accent-blue: #88ccf1; /* Xanh lơ nhạt hơn thay vì xanh đậm */
+    --accent-green: #8ac926;
+    --accent-pink: #ff99c8;
+    --accent-cyan: #00f5d4;
+    --shadow: 6px 6px 0px var(--border-color);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: radial-gradient(#111 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: var(--text-color);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Base Brutal Box */
+.brutal-box {
+    background: #fff;
+    border: 4px solid var(--border-color);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.panel-header {
+    border-bottom: 4px solid var(--border-color);
+    margin: -20px -20px 20px -20px;
+    padding: 15px 20px;
+}
+.panel-header h3 {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: #fff; /* Sidebar màu trắng cho cân bằng */
+    border-right: 4px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+.sidebar .logo {
+    padding: 30px 20px;
+    border-bottom: 4px solid var(--border-color);
+    background: var(--accent-yellow); /* Logo nền vàng */
+}
+.sidebar .logo h2 {
+    font-weight: 900;
+    font-size: 2.5rem;
+    line-height: 0.9;
+    text-transform: uppercase;
+    color: #111;
+}
+
+.nav-links {
+    list-style: none;
+    flex-grow: 1;
+}
+.nav-links li {
+    border-bottom: 4px solid var(--border-color);
+}
+.nav-links a {
+    display: block;
+    padding: 20px;
+    color: #111;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+    background: #fff;
+}
+.nav-links a:hover {
+    background: var(--accent-pink);
+    padding-left: 30px;
+}
+.nav-links li.active a {
+    background: var(--border-color);
+    color: #fff;
+    padding-left: 30px;
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 4px solid var(--border-color);
+    background: #fff;
+    text-align: center;
+}
+.status-badge {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 4px solid var(--border-color);
+    font-weight: 900;
+    background: var(--accent-green);
+    box-shadow: 4px 4px 0px var(--border-color);
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.topbar {
+    height: 60px;
+    border-bottom: 4px solid var(--border-color);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.marquee {
+    flex-grow: 1;
+    border-right: 4px solid var(--border-color);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    background: var(--accent-cyan);
+}
+.user-info {
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 900;
+}
+.avatar {
+    width: 35px;
+    height: 35px;
+    border: 3px solid var(--border-color);
+    background: var(--accent-yellow);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 30px;
+}
+
+/* Inputs & Form */
+.model-selector label, .quick-tests label, .textarea-container label {
+    display: block;
+    font-weight: 900;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.model-selector select {
+    width: 100%;
+    padding: 15px;
+    border: 4px solid var(--border-color);
+    font-size: 1.1rem;
+    font-weight: 900;
+    background: #fff;
+    box-shadow: 4px 4px 0px var(--border-color);
+    margin-bottom: 25px;
+}
+
+.tags {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+.tag {
+    padding: 12px;
+    border: 4px solid var(--border-color);
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px var(--border-color);
+    background: #fff;
+    transition: transform 0.1s;
+}
+.tag:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px var(--border-color);
+}
+.btn-normal:hover { background: var(--accent-green); }
+.btn-anxiety:hover { background: var(--accent-yellow); }
+.btn-depression:hover { background: var(--accent-blue); }
+.btn-suicidal:hover { background: var(--accent-red); color: white;}
+
+textarea {
+    width: 100%;
+    padding: 15px;
+    border: 4px solid var(--border-color);
+    font-size: 1.1rem;
+    font-weight: 700;
+    resize: vertical;
+    box-shadow: 4px 4px 0px var(--border-color);
+}
+textarea:focus { outline: none; background: #fffdf5; }
+
+.brutal-btn {
+    width: 100%;
+    padding: 20px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    background: var(--text-color);
+    color: #fff;
+    border: 4px solid var(--border-color);
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    margin-top: 25px;
+    transition: transform 0.1s;
+}
+.brutal-btn:active {
+    transform: translate(6px, 6px);
+    box-shadow: 0px 0px 0px var(--border-color);
+}
+
+/* Results Panel */
+.result-display {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.label-title, .confidence-title {
+    display: block;
+    font-weight: 900;
+    font-size: 1rem;
+    color: #555;
+    margin-top: 10px;
+}
+#resultLabel {
+    font-size: 4.5rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 5px 0;
+    color: #111;
+}
+#resultConfidence {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #111;
+}
+
+.warning-box {
+    background: var(--text-color);
+    color: var(--accent-yellow);
+    padding: 15px;
+    border: 4px solid var(--border-color);
+    font-weight: 900;
+    font-size: 1.2rem;
+    box-shadow: 4px 4px 0px var(--border-color);
+    margin-bottom: 20px;
+}
+
+.chart-box {
+    margin-top: 20px;
+    border-top: 4px solid var(--border-color);
+    padding-top: 20px;
+}
+.chart-box h4 {
+    font-weight: 900;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    text-align: center;
+}
+.chart-container {
+    height: 180px;
+    width: 100%;
+}
+
+/* Batch Table */
+.brutal-table th, .brutal-table td {
+    padding: 15px;
+    border: 4px solid var(--border-color);
+    font-weight: 700;
+}
+.brutal-table tbody tr {
+    background: #fff;
+}
+
+/* Metrics List */
+.metrics-list {
+    list-style: none;
+    font-size: 1.2rem;
+}
+.metrics-list li {
+    padding: 15px;
+    border-bottom: 4px solid var(--border-color);
+}
+.metrics-list li:last-child {
+    border-bottom: none;
+}
+
+.hidden { display: none !important; }
+.blink { animation: blinker 1s linear infinite; font-size: 1.5rem; font-weight: 900; text-align: center;}
+@keyframes blinker { 50% { opacity: 0; } }
+
+/* Fix text colors */
+.txt-Normal { color: var(--accent-green); }
+.txt-Anxiety { color: #d97706; }
+.txt-Depression { color: #2563eb; }
+.txt-Suicidal { color: var(--accent-red); }
+
+/* Dynamic Background - Keep it subtle, just a slight tint or border change */
+.res-Normal { border-color: var(--accent-green); box-shadow: 6px 6px 0px var(--accent-green); }
+.res-Anxiety { border-color: var(--accent-yellow); box-shadow: 6px 6px 0px var(--accent-yellow); }
+.res-Depression { border-color: var(--accent-blue); box-shadow: 6px 6px 0px var(--accent-blue); }
+.res-Suicidal { border-color: var(--accent-red); box-shadow: 6px 6px 0px var(--accent-red); }

@@ -1,0 +1,12 @@
+{
+  "model": "textcnn",
+  "best_val_macro_f1": 0.8172052895833006,
+  "train_macro_f1_final": 0.9046571941620885,
+  "val_macro_f1_final": 0.8172052895833006,
+  "test_macro_f1": 0.8131522161926078,
+  "train_seconds": 1211.0682857739998,
+  "test_inference_seconds_total": 4.537495919000094,
+  "test_avg_ms_per_sample": 0.611934715981132,
+  "num_test_samples": 7415,
+  "epochs_run": 23
+}

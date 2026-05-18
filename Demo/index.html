@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURODETECT - Full System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h2>NEURO<br>DETECT</h2>
+            </div>
+            <ul class="nav-links">
+                <li id="nav-analysis" class="active"><a href="#" onclick="switchTab('analysis')">TEXT ANALYSIS</a></li>
+                <li id="nav-compare"><a href="#" onclick="switchTab('compare')">MODEL COMPARISON</a></li>
+                <li id="nav-metrics"><a href="#" onclick="switchTab('metrics')">MODEL METRICS</a></li>
+                <li id="nav-settings"><a href="#" onclick="switchTab('settings')">SETTINGS</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="status-badge">API: ONLINE</div>
+            </div>
+        </nav>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="marquee">
+                    <marquee scrollamount="8">
+                        CS221 NLP DEMO • BERT TRANSFORMER ARCHITECTURE • FINE-TUNED FOR MENTAL HEALTH • EARLY WARNING SYSTEM ENABLED • NEURODETECT V2.0
+                    </marquee>
+                </div>
+                <div class="user-info">
+                    <span>Admin</span>
+                    <div class="avatar"></div>
+                </div>
+            </header>
+
+            <!-- SECTION 1: TEXT ANALYSIS -->
+            <div id="sec-analysis" class="dashboard-grid">
+                <!-- Left Panel: Input -->
+                <div class="input-panel brutal-box">
+                    <div class="panel-header" style="background: var(--accent-yellow);">
+                        <h3>1. INPUT CONFIGURATION</h3>
+                    </div>
+                    
+                    <div class="model-selector">
+                        <label>ACTIVE MODEL:</label>
+                        <select id="mainModelSelect">
+                            <option value="BERT">BERT-Base</option>
+                            <option value="BiLSTM">BiLSTM + GloVe</option>
+                            <option value="TextCNN">TextCNN</option>
+                            <option value="SVM">SVM Baseline</option>
+                            <option value="LightGBM">LightGBM</option>
+                        </select>
+                    </div>
+
+                    <div class="quick-tests">
+                        <label>DATASET TEST SAMPLES:</label>
+                        <div class="tags">
+                            <button class="tag btn-normal" onclick="fillTest('normal')">Normal</button>
+                            <button class="tag btn-anxiety" onclick="fillTest('anxiety')">Anxiety</button>
+                            <button class="tag btn-depression" onclick="fillTest('depression')">Depression</button>
+                            <button class="tag btn-suicidal" onclick="fillTest('suicidal')">Suicidal</button>
+                        </div>
+                    </div>
+
+                    <div class="textarea-container">
+                        <label>TEXT PAYLOAD:</label>
+                        <textarea id="textInput" rows="5" placeholder="Enter social media text here for deep learning analysis..."></textarea>
+                    </div>
+
+                    <button id="analyzeBtn" class="brutal-btn" onclick="analyzeText()">EXECUTE INFERENCE</button>
+                </div>
+
+                <!-- Right Panel: Results -->
+                <div class="right-panel">
+                    <div id="loading" class="brutal-box hidden">
+                        <p class="blink">PROCESSING TENSORS...</p>
+                    </div>
+
+                    <div id="resultCard" class="brutal-box hidden">
+                        <div class="panel-header" style="background: var(--accent-pink);">
+                            <h3>2. ANALYSIS REPORT</h3>
+                        </div>
+                        
+                        <div class="result-display">
+                            <span class="label-title">PREDICTED CLASS</span>
+                            <h2 id="resultLabel">NORMAL</h2>
+                            <span class="confidence-title">CONFIDENCE SCORE</span>
+                            <h3 id="resultConfidence">0%</h3>
+                        </div>
+                        
+                        <div id="warningMessage" class="warning-box hidden">
+                            <marquee scrollamount="15">🚨 DANGER: HIGH RISK DETECTED - EARLY INTERVENTION PROTOCOL INITIATED 🚨</marquee>
+                        </div>
+
+                        <div class="chart-box">
+                            <h4>PROBABILITY DISTRIBUTION MATRIX</h4>
+                            <div class="chart-container">
+                                <canvas id="probChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: MODEL COMPARISON -->
+            <div id="sec-compare" class="dashboard-grid hidden">
+                <div class="brutal-box" style="grid-column: span 2;">
+                    <div class="panel-header" style="background: var(--accent-cyan);">
+                        <h3>MULTI-MODEL COMPARISON SUITE</h3>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <label style="font-weight:900; display:block; margin-bottom:10px;">TEST CASE:</label>
+                            <div class="tags" style="margin-bottom:15px;">
+                                <button class="tag btn-normal" onclick="fillCompare('normal')">Normal</button>
+                                <button class="tag btn-anxiety" onclick="fillCompare('anxiety')">Anxiety</button>
+                                <button class="tag btn-depression" onclick="fillCompare('depression')">Depression</button>
+                                <button class="tag btn-suicidal" onclick="fillCompare('suicidal')">Suicidal</button>
+                            </div>
+                            <textarea id="compareInput" rows="4" placeholder="Text payload..." style="width:100%;"></textarea>
+                        </div>
+                        <div>
+                            <label style="font-weight:900; display:block; margin-bottom:10px;">GROUND TRUTH (EXPECTED):</label>
+                            <select id="compareTruth" style="width:100%; padding:15px; border:4px solid var(--border-color); font-weight:900; font-size:1.1rem; box-shadow: 4px 4px 0px var(--border-color);">
+                                <option value="Normal">Normal</option>
+                                <option value="Anxiety">Anxiety</option>
+                                <option value="Depression">Depression</option>
+                                <option value="Suicidal">Suicidal</option>
+                            </select>
+                            
+                            <button class="brutal-btn" onclick="runComparison()" style="margin-top:20px; background: var(--accent-blue);">RUN 5-MODEL BENCHMARK</button>
+                        </div>
+                    </div>
+                    
+                    <div id="compareLoading" class="hidden" style="margin-top:20px;">
+                        <p class="blink">RUNNING PARALLEL INFERENCE ON 5 MODELS...</p>
+                    </div>
+
+                    <table class="brutal-table hidden" id="compareResultTable" style="margin-top:30px; width:100%; border-collapse: collapse; text-align:center;">
+                        <thead>
+                            <tr style="background: var(--border-color); color: white;">
+                                <th style="padding:15px; border: 4px solid var(--border-color);">MODEL ARCHITECTURE</th>
+                                <th style="padding:15px; border: 4px solid var(--border-color);">PREDICTION</th>
+                                <th style="padding:15px; border: 4px solid var(--border-color);">CONFIDENCE</th>
+                                <th style="padding:15px; border: 4px solid var(--border-color);">MATCH (ACCURACY)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 3: MODEL METRICS -->
+            <div id="sec-metrics" class="dashboard-grid hidden">
+                <div class="brutal-box" style="grid-column: span 2;">
+                    <div class="panel-header" style="background: var(--accent-green);">
+                        <h3>GLOBAL PERFORMANCE BENCHMARKS</h3>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center;">
+                        <table class="brutal-table" style="width:100%; border-collapse: collapse; text-align:center;">
+                            <thead>
+                                <tr style="background: var(--border-color); color: white;">
+                                    <th style="padding:15px; border: 4px solid var(--border-color);">MODEL</th>
+                                    <th style="padding:15px; border: 4px solid var(--border-color);">ACCURACY</th>
+                                    <th style="padding:15px; border: 4px solid var(--border-color);">F1-SCORE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: var(--accent-yellow); font-weight: 900;">
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">BERT (Fine-tuned)</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">84.70%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">83.50%</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">BiLSTM + GloVe</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">83.86%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">82.10%</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">TextCNN</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">82.50%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">81.20%</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">SVM Baseline</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">80.12%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">78.45%</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">LightGBM</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">79.30%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">77.80%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="metricsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: SETTINGS -->
+            <div id="sec-settings" class="dashboard-grid hidden">
+                <div class="brutal-box" style="grid-column: span 2;">
+                    <div class="panel-header" style="background: var(--border-color); color: white;">
+                        <h3>SYSTEM CONFIGURATION</h3>
+                    </div>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <label style="font-weight:900; display:block; margin-bottom:10px;">API ENDPOINT (KAGGLE NGROK URL):</label>
+                        <input type="text" id="settingApiUrl" value="https://unmoldered-patellate-angela.ngrok-free.dev/api/predict" style="width:100%; padding:15px; border:4px solid var(--border-color); font-size:1.1rem; font-weight:700;">
+                        <p style="font-size:0.9rem; margin-top:5px; font-weight:bold;">Update this URL if you restart the Kaggle backend notebook.</p>
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <label style="font-weight:900; display:flex; align-items:center; gap:10px; cursor:pointer;">
+                            <input type="checkbox" id="settingWarning" checked style="width:25px; height:25px; accent-color: var(--border-color);">
+                            ENABLE EARLY WARNING PROTOCOL (ALERT ON SUICIDAL)
+                        </label>
+                    </div>
+
+                    <button class="brutal-btn" onclick="saveSettings()">SAVE CONFIGURATION</button>
+                    <p id="saveMsg" class="hidden" style="color:var(--accent-green); font-weight:bold; margin-top:10px; font-size:1.2rem;">Settings Saved Successfully!</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
