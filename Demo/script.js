@@ -2,15 +2,15 @@ let apiUrl = "https://unmoldered-patellate-angela.ngrok-free.dev/api/predict";
 
 // Stronger, highly explicit test cases to force correct BERT predictions
 const testCases = {
-    'normal': "I had a wonderful time at the park today with my family. The weather was beautiful, and I felt so happy and relaxed. Looking forward to tomorrow!",
-    'anxiety': "I am so worried and nervous. I have severe anxiety and panic attacks constantly. My chest feels tight and I am afraid of social situations and the future.",
-    'depression': "I feel incredibly empty and numb. I have clinical depression and I've lost interest in everything. Getting out of bed takes all my energy, and I just want to sleep all day.",
-    'suicidal': "I can't take this pain anymore. I feel completely hopeless and everyone would be better off without me. I just want to kill myself and end it all tonight. I'm sorry."
+    'normal': "I've fallen in love, I swear to anything, she is perfect for me, I want to spend my life with her",
+    'anxiety': "i'm constantly worrying about her. wether if she is cheating or if she's losing interest. it haunts me everyday. she's so important to me i don't want to lose her.",
+    'depression': "I am always poor, and broke. I just cannot find anyone to love. If everything is painful, what is the point of being around? what is the point if everything is painful",
+    'suicidal': "I can't keep playing this game. I can't explain everything. It's just too much. Im going to hang myself tonight."
 };
 
 let probChart = null;
 let metricsChart = null;
-
+let timeChart = null;
 // TAB SWITCHING LOGIC
 function switchTab(tabId) {
     // Hide all
@@ -18,7 +18,7 @@ function switchTab(tabId) {
     document.getElementById('sec-compare').classList.add('hidden');
     document.getElementById('sec-metrics').classList.add('hidden');
     document.getElementById('sec-settings').classList.add('hidden');
-    
+
     // Remove active class
     document.getElementById('nav-analysis').classList.remove('active');
     document.getElementById('nav-compare').classList.remove('active');
@@ -68,13 +68,13 @@ async function analyzeText() {
             headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
             body: JSON.stringify({ text: text, model: model })
         });
-        
+
         if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
         let data = await response.json();
-        
-        let label = data.label; 
+
+        let label = data.label;
         let confidence = data.confidence;
-        
+
         // Handle probability distribution fallback
         let probs = data.probabilities;
         if (!probs) {
@@ -99,12 +99,12 @@ async function analyzeText() {
 function updateDashboard(label, confidence, probs) {
     const resultCard = document.getElementById('resultCard');
     resultCard.classList.remove('hidden');
-    
+
     resultCard.className = `brutal-box result-card res-${label}`;
-    
+
     document.getElementById('resultLabel').innerText = label;
     document.getElementById('resultLabel').style.color = getLabelColor(label);
-    
+
     document.getElementById('resultConfidence').innerText = `${(confidence * 100).toFixed(2)}%`;
 
     const warningEnabled = document.getElementById('settingWarning').checked;
@@ -140,7 +140,7 @@ function renderChart(probs) {
                 backgroundColor: bgColors,
                 borderColor: '#111',
                 borderWidth: 4,
-                borderRadius: 0 
+                borderRadius: 0
             }]
         },
         options: {
@@ -164,7 +164,7 @@ function fillCompare(type) {
 async function runComparison() {
     const text = document.getElementById('compareInput').value.trim();
     const truth = document.getElementById('compareTruth').value;
-    
+
     if (!text) {
         alert("Please enter text payload.");
         return;
@@ -190,8 +190,8 @@ async function runComparison() {
             const res = await response.json();
 
             let isMatch = (res.label === truth);
-            
-            let icon = isMatch ? '✅ MATCH' : '❌ FAIL';
+
+            let icon = isMatch ? 'MATCH' : 'FAIL';
             let color = isMatch ? '#8ac926' : '#ff3c38';
             let bg = (m === 'BERT') ? 'var(--accent-yellow)' : '#fff';
 
@@ -200,7 +200,7 @@ async function runComparison() {
             tr.innerHTML = `
                 <td style="padding:15px; border:4px solid #111; font-weight:900;">${m}</td>
                 <td style="padding:15px; border:4px solid #111; font-weight:900;" class="txt-${res.label}">${res.label.toUpperCase()}</td>
-                <td style="padding:15px; border:4px solid #111;">${(res.confidence*100).toFixed(2)}%</td>
+                <td style="padding:15px; border:4px solid #111;">${(res.confidence * 100).toFixed(2)}%</td>
                 <td style="padding:15px; border:4px solid #111; font-weight:900; color:${color};">${icon}</td>
             `;
             tbody.appendChild(tr);
@@ -217,27 +217,82 @@ async function runComparison() {
 // METRICS CHART
 function renderMetricsChart() {
     if (metricsChart) return; // Already rendered
-    
+
     const ctx = document.getElementById('metricsChart').getContext('2d');
-    
+
     metricsChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['BERT', 'BiLSTM', 'TextCNN', 'SVM', 'LightGBM'],
+            labels: ['BERT', 'BiLSTM', 'TextCNN', 'LightGBM', 'SVM'],
             datasets: [{
-                label: 'Accuracy (%)',
-                data: [84.70, 83.86, 82.50, 80.12, 79.30],
-                backgroundColor: ['#ffca3a', '#88ccf1', '#ff99c8', '#8ac926', '#ff3c38'],
+                label: 'F1-Score (%)',
+                data: [84.74, 82.99, 81.20, 78.47, 77.91],
+                backgroundColor: ['#ffca3a', '#88ccf1', '#ff99c8', '#ff3c38', '#8ac926'],
                 borderColor: '#111',
                 borderWidth: 4,
-                borderRadius: 0 
+                borderRadius: 0
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'MODEL F1-SCORE', font: { weight: '900', size: 16 } }
+            },
             scales: {
                 y: { min: 70, max: 90, grid: { color: '#111', lineWidth: 2 }, border: { color: '#111', width: 4 }, ticks: { font: { weight: 'bold' } } },
+                x: { grid: { display: false }, border: { color: '#111', width: 4 }, ticks: { font: { weight: '900' } } }
+            }
+        }
+    });
+
+    const ctxTime = document.getElementById('timeChart').getContext('2d');
+    timeChart = new Chart(ctxTime, {
+        type: 'bar',
+        data: {
+            labels: ['BERT', 'BiLSTM', 'TextCNN', 'LightGBM', 'SVM'],
+            datasets: [
+                {
+                    label: 'Inference Time (ms)',
+                    data: [9.89, 0.66, 0.61, 0.15, 0.03],
+                    backgroundColor: '#8ac926',
+                    borderColor: '#111',
+                    borderWidth: 4,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: 'Train Time (mins)',
+                    data: [87.5, 28.6, 20.18, 4.93, 1.02],
+                    backgroundColor: '#ff3c38',
+                    borderColor: '#ff3c38',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#111',
+                    pointBorderWidth: 3,
+                    pointRadius: 6,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                title: { display: true, text: 'COMPUTATIONAL EFFICIENCY', font: { weight: '900', size: 16 } }
+            },
+            scales: {
+                y: {
+                    type: 'linear', display: true, position: 'left',
+                    grid: { color: '#111', lineWidth: 2 }, border: { color: '#111', width: 4 },
+                    ticks: { font: { weight: 'bold' } },
+                    title: { display: true, text: 'Inference (ms)', font: { weight: 'bold' } }
+                },
+                y1: {
+                    type: 'linear', display: true, position: 'right',
+                    grid: { display: false }, border: { color: '#111', width: 4 },
+                    ticks: { font: { weight: 'bold' } },
+                    title: { display: true, text: 'Train Time (mins)', font: { weight: 'bold' } }
+                },
                 x: { grid: { display: false }, border: { color: '#111', width: 4 }, ticks: { font: { weight: '900' } } }
             }
         }

@@ -17,7 +17,7 @@
             </div>
             <ul class="nav-links">
                 <li id="nav-analysis" class="active"><a href="#" onclick="switchTab('analysis')">TEXT ANALYSIS</a></li>
-                <li id="nav-compare"><a href="#" onclick="switchTab('compare')">MODEL COMPARISON</a></li>
+                <li id="nav-compare"><a href="#" onclick="switchTab('compare')">COMPARISON</a></li>
                 <li id="nav-metrics"><a href="#" onclick="switchTab('metrics')">MODEL METRICS</a></li>
                 <li id="nav-settings"><a href="#" onclick="switchTab('settings')">SETTINGS</a></li>
             </ul>
@@ -166,46 +166,56 @@
                         <h3>GLOBAL PERFORMANCE BENCHMARKS</h3>
                     </div>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center;">
+                    <div style="margin-bottom: 30px;">
                         <table class="brutal-table" style="width:100%; border-collapse: collapse; text-align:center;">
                             <thead>
                                 <tr style="background: var(--border-color); color: white;">
                                     <th style="padding:15px; border: 4px solid var(--border-color);">MODEL</th>
-                                    <th style="padding:15px; border: 4px solid var(--border-color);">ACCURACY</th>
                                     <th style="padding:15px; border: 4px solid var(--border-color);">F1-SCORE</th>
+                                    <th style="padding:15px; border: 4px solid var(--border-color);">TRAIN TIME</th>
+                                    <th style="padding:15px; border: 4px solid var(--border-color);">INFERENCE TIME (ms/sample)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr style="background: var(--accent-yellow); font-weight: 900;">
                                     <td style="padding:15px; border: 4px solid var(--border-color);">BERT (Fine-tuned)</td>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">84.70%</td>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">83.50%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">84.74%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">1h 27m 30s</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">9.89</td>
                                 </tr>
                                 <tr>
                                     <td style="padding:15px; border: 4px solid var(--border-color);">BiLSTM + GloVe</td>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">83.86%</td>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">82.10%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">82.99%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">28m 36s</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">0.66</td>
                                 </tr>
                                 <tr>
                                     <td style="padding:15px; border: 4px solid var(--border-color);">TextCNN</td>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">82.50%</td>
                                     <td style="padding:15px; border: 4px solid var(--border-color);">81.20%</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">SVM Baseline</td>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">80.12%</td>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">78.45%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">20m 11s</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">0.61</td>
                                 </tr>
                                 <tr>
                                     <td style="padding:15px; border: 4px solid var(--border-color);">LightGBM</td>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">79.30%</td>
-                                    <td style="padding:15px; border: 4px solid var(--border-color);">77.80%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">78.47%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">4m 56s</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">0.15</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">SVM Baseline</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">77.91%</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">1m 01s</td>
+                                    <td style="padding:15px; border: 4px solid var(--border-color);">0.03</td>
                                 </tr>
                             </tbody>
                         </table>
-                        
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                         <div class="chart-container" style="height: 300px;">
                             <canvas id="metricsChart"></canvas>
+                        </div>
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="timeChart"></canvas>
                         </div>
                     </div>
                 </div>
