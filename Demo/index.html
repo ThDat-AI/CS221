@@ -12,17 +12,38 @@
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
-            <div class="logo">
-                <h2>NEURO<br>DETECT</h2>
+            <div class="logo" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="logo-text">NEURO<br>DETECT</h2>
+                <button onclick="toggleSidebar()" class="collapse-btn" style="background: none; border: none; font-size: 1.5rem; font-weight: 900; cursor: pointer; color: #111;">≡</button>
             </div>
             <ul class="nav-links">
-                <li id="nav-analysis" class="active"><a href="#" onclick="switchTab('analysis')">TEXT ANALYSIS</a></li>
-                <li id="nav-compare"><a href="#" onclick="switchTab('compare')">COMPARISON</a></li>
-                <li id="nav-metrics"><a href="#" onclick="switchTab('metrics')">MODEL METRICS</a></li>
-                <li id="nav-settings"><a href="#" onclick="switchTab('settings')">SETTINGS</a></li>
+                <li id="nav-live" class="active"><a href="#" onclick="switchTab('live')">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    <span class="nav-text">LIVE MODERATION</span>
+                </a></li>
+                
+                <li id="nav-analysis"><a href="#" onclick="switchTab('analysis')">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span class="nav-text">TEXT ANALYSIS</span>
+                </a></li>
+                
+                <li id="nav-compare"><a href="#" onclick="switchTab('compare')">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="3" x2="12" y2="21"></line></svg>
+                    <span class="nav-text">COMPARISON</span>
+                </a></li>
+                
+                <li id="nav-metrics"><a href="#" onclick="switchTab('metrics')">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span class="nav-text">MODEL METRICS</span>
+                </a></li>
+                
+                <li id="nav-settings"><a href="#" onclick="switchTab('settings')">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <span class="nav-text">SETTINGS</span>
+                </a></li>
             </ul>
             <div class="sidebar-footer">
-                <div class="status-badge">API: ONLINE</div>
+                <div class="status-badge nav-text">API: ONLINE</div>
             </div>
         </nav>
 
@@ -41,8 +62,63 @@
                 </div>
             </header>
 
+            <!-- SECTION 0: LIVE MODERATION -->
+            <div id="sec-live" class="dashboard-grid">
+                <div class="brutal-box" style="grid-column: span 2; display: flex; flex-direction: column;">
+                    <div class="panel-header" style="background: var(--accent-cyan); display: flex; justify-content: space-between; align-items: center;">
+                        <h3>REAL-TIME REDDIT MONITORING</h3>
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <label style="font-weight: 900;">POSTS:</label>
+                            <select id="postCountSelect" style="padding: 10px; border: 4px solid var(--border-color); font-weight: 900; background: #fff;">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                            </select>
+                            
+                            <label style="font-weight: 900; margin-left: 10px;">SUBREDDIT:</label>
+                            <select id="subredditSelect" style="padding: 10px; border: 4px solid var(--border-color); font-weight: 900; background: #fff;">
+                                <option value="TrueOffMyChest">r/TrueOffMyChest</option>
+                                <option value="casualconversation">r/CasualConversation</option>
+                                <option value="Anxiety">r/Anxiety</option>
+                                <option value="depression">r/Depression</option>
+                                <option value="SuicideWatch">r/SuicideWatch</option>
+                            </select>
+                            <button class="brutal-btn" style="margin-top: 0; padding: 10px 20px; font-size: 1rem;" onclick="startLiveScan()">FETCH & SCAN</button>
+                        </div>
+                    </div>
+                    
+                    <div id="liveLoading" class="hidden" style="text-align: center; padding: 30px;">
+                        <h2 class="blink" style="color: var(--accent-red);">CONNECTING TO REDDIT API & RUNNING BERT...</h2>
+                    </div>
+
+                    <div style="display: flex; gap: 30px;">
+                        <div id="liveFeedContainer" style="flex: 2; display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
+                            <!-- Live posts will be injected here -->
+                            <div style="text-align: center; color: #555; padding: 40px; font-weight: bold; border: 4px dashed var(--border-color);">
+                                NO DATA. CLICK "FETCH & SCAN" TO PULL LIVE POSTS.
+                            </div>
+                        </div>
+
+                        <div id="liveStatsPanel" style="flex: 1; margin-top: 20px; display: none;">
+                            <div class="brutal-box" style="position: sticky; top: 20px;">
+                                <h4 style="font-weight: 900; text-align: center; border-bottom: 4px solid #111; padding-bottom: 10px; margin-bottom: 15px;">BATCH DISTRIBUTION</h4>
+                                <canvas id="liveChart" style="max-height: 250px;"></canvas>
+                                
+                                <div style="margin-top: 20px; font-weight: 900; display: flex; flex-direction: column; gap: 10px;">
+                                    <div style="display: flex; justify-content: space-between;"><span style="color: var(--accent-green);">Normal:</span> <span id="statNormal">0</span></div>
+                                    <div style="display: flex; justify-content: space-between;"><span style="color: #d97706;">Anxiety:</span> <span id="statAnxiety">0</span></div>
+                                    <div style="display: flex; justify-content: space-between;"><span style="color: #2563eb;">Depression:</span> <span id="statDepression">0</span></div>
+                                    <div style="display: flex; justify-content: space-between; color: var(--accent-red);"><span>Suicidal (SOS):</span> <span id="statSuicidal">0</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- SECTION 1: TEXT ANALYSIS -->
-            <div id="sec-analysis" class="dashboard-grid">
+            <div id="sec-analysis" class="dashboard-grid hidden">
                 <!-- Left Panel: Input -->
                 <div class="input-panel brutal-box">
                     <div class="panel-header" style="background: var(--accent-yellow);">
