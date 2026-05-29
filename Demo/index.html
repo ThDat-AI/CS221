@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEURODETECT - Full System</title>
+    <title>ENELPI - Full System</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,7 +13,7 @@
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <div class="logo" style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="logo-text">NEURO<br>DETECT</h2>
+                <h2 class="logo-text">ENELPI</h2>
                 <button onclick="toggleSidebar()" class="collapse-btn" style="background: none; border: none; font-size: 1.5rem; font-weight: 900; cursor: pointer; color: #111;">≡</button>
             </div>
             <ul class="nav-links">
@@ -43,7 +43,8 @@
                 </a></li>
             </ul>
             <div class="sidebar-footer">
-                <div class="status-badge nav-text">API: ONLINE</div>
+                <img class="uit-logo" src="uit.png" alt="UIT logo">
+                <button class="team-trigger nav-text" onclick="openTeamModal()">ENELPI TEAM</button>
             </div>
         </nav>
 
@@ -53,12 +54,11 @@
             <header class="topbar">
                 <div class="marquee">
                     <marquee scrollamount="8">
-                        CS221 NLP DEMO • BERT TRANSFORMER ARCHITECTURE • FINE-TUNED FOR MENTAL HEALTH • EARLY WARNING SYSTEM ENABLED • NEURODETECT V2.0
+                        ENELPI • CS221 NLP DEMO • BERT TRANSFORMER ARCHITECTURE • FINE-TUNED FOR MENTAL HEALTH • EARLY WARNING SYSTEM ENABLED
                     </marquee>
                 </div>
                 <div class="user-info">
-                    <span>Admin</span>
-                    <div class="avatar"></div>
+                    <div class="status-badge">API: ONLINE</div>
                 </div>
             </header>
 
@@ -173,7 +173,7 @@
                         </div>
                         
                         <div id="warningMessage" class="warning-box hidden">
-                            <marquee scrollamount="15">🚨 DANGER: HIGH RISK DETECTED - EARLY INTERVENTION PROTOCOL INITIATED 🚨</marquee>
+                            <div class="warning-text">🚨 DANGER: HIGH RISK DETECTED 🚨</div>
                         </div>
 
                         <div class="chart-box">
@@ -324,6 +324,34 @@
 
         </main>
     </div>
+
+    <div id="teamModal" class="team-modal hidden" onclick="closeTeamModal(event)">
+        <div class="team-modal-card" role="dialog" aria-modal="true" aria-labelledby="teamModalTitle" onclick="event.stopPropagation()">
+            <button class="team-modal-close" onclick="closeTeamModal()" aria-label="Close team credits">×</button>
+            <div class="team-modal-header">
+                <img src="uit.png" alt="UIT logo">
+                <div>
+                    <span>UNIVERSITY OF INFORMATION TECHNOLOGY</span>
+                    <h2 id="teamModalTitle">ENELPI TEAM</h2>
+                </div>
+            </div>
+            <div class="team-modal-grid">
+                <div class="team-member-card">
+                    <strong>23520142</strong>
+                    <span>Trần Lê Gia Bảo</span>
+                </div>
+                <div class="team-member-card">
+                    <strong>23520251</strong>
+                    <span>Lê Thành Thắng Đạt</span>
+                </div>
+                <div class="team-member-card">
+                    <strong>23520662</strong>
+                    <span>Nguyễn Khang Hy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

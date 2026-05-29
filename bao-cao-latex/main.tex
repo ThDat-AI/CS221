@@ -1,0 +1,805 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+% =========================
+% Encoding, Language, Fonts
+% =========================
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\setmainfont{TeX Gyre Termes}}
+\usepackage[vietnamese]{babel}
+
+% =========================
+% Page Layout and Styling
+% =========================
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3.0cm,right=2.5cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.25}
+\newlength{\manualparindent}
+\setlength{\manualparindent}{1.2cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.08em}
+\newcommand{\manualindent}{\hspace*{\manualparindent}}
+\sloppy
+
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\setlist{topsep=0.25em,itemsep=0.1em,parsep=0pt}
+\titlespacing*{\chapter}{0pt}{-0.4cm}{0.8cm}
+\titlespacing*{\section}{0pt}{0.7em}{0.35em}
+\titlespacing*{\subsection}{0pt}{0.5em}{0.25em}
+
+\graphicspath{{./}{../Notebooks/Phase_3/2.DeepLearning/DeepLearning/BiLSTM/plots/}{../Notebooks/Phase_3/2.DeepLearning/DeepLearning/TextCNN/plots/}}
+
+\definecolor{uitblue}{RGB}{0,65,120}
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{darkgray}{RGB}{60,60,60}
+
+\newcommand{\coverborder}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[line width=0.8pt]
+      ([xshift=1.2cm,yshift=-1.2cm]current page.north west)
+      rectangle
+      ([xshift=-1.2cm,yshift=1.2cm]current page.south east);
+    \draw[line width=0.3pt]
+      ([xshift=1.35cm,yshift=-1.35cm]current page.north west)
+      rectangle
+      ([xshift=-1.35cm,yshift=1.35cm]current page.south east);
+  \end{tikzpicture}
+}
+
+\newcommand{\universitylogo}{%
+  \IfFileExists{uit.png}{%
+    \includegraphics[height=2.7cm]{uit.png}%
+  }{%
+    \begin{tikzpicture}
+      \draw[line width=0.6pt, color=uitblue] (0,0) rectangle (3.2,2.6);
+      \node[align=center, color=uitblue, font=\bfseries\small] at (1.6,1.3)
+      {LOGO\\UIT};
+    \end{tikzpicture}%
+  }%
+}
+
+\newcommand{\placeholderfigure}[1]{%
+  \fbox{\begin{minipage}{0.88\textwidth}
+    \centering
+    \vspace{0.3cm}
+    \textit{#1}
+    \vspace{0.3cm}
+  \end{minipage}}%
+}
+
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  justification=centering
+}
+
+\lstdefinestyle{promptstyle}{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{lightgray},
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false
+}
+
+\renewcommand{\contentsname}{MỤC LỤC}
+\renewcommand{\chaptername}{Chương}
+\renewcommand{\bibname}{TÀI LIỆU THAM KHẢO}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+
+\newcommand{\projecttitle}{SENTIMENT ANALYSIS FOR MENTAL HEALTH}
+
+\begin{document}
+
+% =========================
+% Cover Page
+% =========================
+\begin{titlepage}
+  \begingroup
+  \setstretch{1.0}
+  \setlength{\parskip}{0pt}
+  \coverborder
+  \centering
+  \vspace*{0.35cm}
+
+  {\bfseries\Large TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN}\\
+  {\bfseries\large ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH}\\
+  {\bfseries\large KHOA KHOA HỌC MÁY TÍNH}
+
+  \vspace{0.45cm}
+  \IfFileExists{uit.png}{\includegraphics[height=2.1cm]{uit.png}}{\universitylogo}
+
+  \vspace{0.6cm}
+
+  {\bfseries\Large BÁO CÁO ĐỒ ÁN CUỐI KỲ}\\[0.25cm]
+  {\bfseries\large MÔN HỌC: CS221 - XỬ LÝ NGÔN NGỮ TỰ NHIÊN}
+
+  \vspace{0.85cm}
+
+  \begin{minipage}{0.9\textwidth}
+    \centering
+    {\bfseries\large\color{uitblue} \projecttitle}\\[0.2cm]
+    {\bfseries\normalsize NeuroDetect v2.0 - Hệ thống phân loại văn bản sức khỏe tinh thần}
+  \end{minipage}
+
+  \vspace{0.85cm}
+
+  \small
+  \begin{tabular}{>{\bfseries}p{4.6cm}p{8.2cm}}
+    Giảng viên hướng dẫn: & TS. Nguyễn Trọng Chỉnh \\
+    Nhóm thực hiện: & ENELPI \\
+    Bài toán: & Phân loại văn bản mạng xã hội theo trạng thái sức khỏe tinh thần \\
+    Thời gian thực hiện: & 05/2026 \\
+  \end{tabular}
+
+  \vspace{0.55cm}
+
+  \begin{tabular}{clc}
+    \toprule
+    STT & Họ và tên & MSSV \\
+    \midrule
+    1 & Trần Lê Gia Bảo & 23520142 \\
+    2 & Lê Thành Thắng Đạt & 23520251 \\
+    3 & Nguyễn Khang Hy & 23520662 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6cm}
+  {\bfseries TP. Hồ Chí Minh, tháng 05 năm 2026}
+  \endgroup
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+% =========================
+% Abstract
+% =========================
+\chapter*{TÓM TẮT}
+\addcontentsline{toc}{chapter}{TÓM TẮT}
+
+\manualindent%
+Đồ án này xây dựng hệ thống phân loại văn bản sức khỏe tinh thần từ dữ liệu mạng xã hội, với bốn nhãn đầu ra: \textit{Normal}, \textit{Anxiety}, \textit{Depression} và \textit{Suicidal}. Bài toán có ý nghĩa thực tiễn vì nhiều người gặp bất ổn tâm lý thường bộc lộ cảm xúc qua các bài đăng trực tuyến, trong khi các tín hiệu kêu cứu có thể bị trôi trong lượng thông tin rất lớn. Mục tiêu của hệ thống là hỗ trợ phát hiện sớm các văn bản có dấu hiệu rủi ro, đồng thời so sánh hiệu quả giữa các hướng tiếp cận học máy truyền thống, học sâu và fine-tuning Transformer.
+
+\manualindent%
+Nhóm sử dụng dữ liệu tiếng Anh gồm 49.612 mẫu thô không cân bằng và 992 mẫu kiểm thử cân bằng, sau đó xử lý rò rỉ dữ liệu, loại bỏ trùng lặp và chia lại thành ba tập train, validation, test theo tỷ lệ 70\%-15\%-15\%. Tập train sau khi chia có 34.600 mẫu, tập validation có 7.416 mẫu và tập test có 7.415 mẫu. Pipeline tiền xử lý tập trung vào việc giảm nhiễu của dữ liệu mạng xã hội như lỗi mã hóa, URL, mention, hashtag, emoji, ký tự lặp và Unicode bất thường, nhưng vẫn bảo toàn các tín hiệu cảm xúc quan trọng cho mô hình.
+
+\manualindent%
+Nhóm triển khai năm mô hình: Linear SVM, LightGBM, TextCNN, BiLSTM kết hợp attention và BERT fine-tuned. Kết quả trên tập test cho thấy Fine-tuned BERT đạt macro F1 cao nhất là 0,8474; BiLSTM + Attention đạt 0,8299; TextCNN đạt 0,8131; LightGBM đạt 0,7847; Linear SVM đạt 0,7791. Phân tích lỗi cho thấy thách thức lớn nhất nằm ở ranh giới giữa \textit{Depression} và \textit{Suicidal}, do hai nhóm này có mức chồng lắp từ vựng rất cao và nhiều trường hợp cần hiểu chủ thể, ngữ cảnh, mức độ ý định tự hại thay vì chỉ dựa vào từ khóa.
+
+\manualindent%
+\textbf{Từ khóa:} Mental Health Text Classification, Sentiment Analysis, Social Media NLP, SVM, LightGBM, TextCNN, BiLSTM, BERT, Early Warning System.
+
+% =========================
+% Chapter 1
+% =========================
+\chapter{TỔNG QUAN}
+
+\section{Bối cảnh và lý do chọn đề tài}
+
+\manualindent%
+Sức khỏe tinh thần đang trở thành một vấn đề xã hội ngày càng đáng chú ý, đặc biệt trong nhóm người trẻ và người dùng mạng xã hội. Không phải lúc nào người gặp khó khăn tâm lý cũng tìm đến tư vấn chuyên môn; nhiều người chọn viết ẩn danh trên các diễn đàn, mạng xã hội hoặc cộng đồng trực tuyến. Những bài viết này có thể chứa dấu hiệu lo âu, trầm cảm, tuyệt vọng hoặc ý định tự tử, nhưng rất khó được phát hiện thủ công khi số lượng nội dung tăng nhanh.
+
+\manualindent%
+Từ góc nhìn xử lý ngôn ngữ tự nhiên, đây là một bài toán phân loại văn bản có độ nhạy cao. Văn bản mạng xã hội thường không sạch: câu dài ngắn thất thường, nhiều từ lóng, lỗi chính tả, teencode, emoji, URL, mention và các biểu đạt cảm xúc rất cá nhân. Ngoài ra, ranh giới giữa các nhãn bệnh lý không luôn rõ ràng. Ví dụ, một văn bản nhắc đến ``depression'' chưa chắc người viết đang trầm cảm; họ có thể chỉ đang hỏi cách hỗ trợ người thân. Ngược lại, một câu hỏi về ``suicidal thought'' có thể bị gán nhẹ thành trầm cảm dù tín hiệu tự sát là yếu tố cần ưu tiên cảnh báo.
+
+\manualindent%
+Vì vậy, nhóm chọn đề tài \textit{Sentiment Analysis for Mental Health} nhằm xây dựng một pipeline phân loại văn bản mạng xã hội theo bốn trạng thái sức khỏe tinh thần. Hệ thống không thay thế chẩn đoán y khoa, nhưng có thể đóng vai trò như lớp hỗ trợ sàng lọc ban đầu, giúp ưu tiên các trường hợp cần quan tâm trong một hệ thống cảnh báo sớm.
+
+\section{Phát biểu bài toán}
+
+\manualindent%
+Đầu vào của bài toán là một đoạn văn bản tiếng Anh thô được thu thập từ mạng xã hội hoặc diễn đàn trực tuyến. Đầu ra là một trong bốn nhãn:
+
+\begin{itemize}
+  \item \textbf{Normal}: văn bản thông thường, không biểu hiện rõ bất ổn tâm lý của chính người viết.
+  \item \textbf{Anxiety}: văn bản thể hiện lo âu, hoảng sợ, bồn chồn, mất kiểm soát suy nghĩ hoặc triệu chứng cơ thể liên quan đến lo âu.
+  \item \textbf{Depression}: văn bản thể hiện buồn bã kéo dài, tuyệt vọng, vô cảm, cạn kiệt năng lượng, mất hứng thú hoặc cảm giác mắc kẹt.
+  \item \textbf{Suicidal}: văn bản có ý nghĩ tự sát, ý định tự hại, kế hoạch, phương tiện hoặc dấu hiệu nguy cơ nghiêm trọng hơn trầm cảm thông thường.
+\end{itemize}
+
+\manualindent%
+Về mặt kỹ thuật, đây là bài toán phân loại đa lớp một nhãn. Với mỗi văn bản $x$, mô hình cần học hàm $f(x) \rightarrow y$, trong đó $y \in \{\text{Normal}, \text{Anxiety}, \text{Depression}, \text{Suicidal}\}$. Do các nhãn không cân bằng và chi phí sai khác nhau giữa các lớp, nhóm chọn macro F1 làm độ đo chính để tránh việc mô hình chỉ tối ưu cho lớp đông mẫu.
+
+\section{Mục tiêu đồ án}
+
+Đồ án hướng đến các mục tiêu chính sau:
+
+\begin{enumerate}[label=\arabic*.]
+  \item Khảo sát đặc điểm dữ liệu văn bản sức khỏe tinh thần, bao gồm phân bố nhãn, độ dài văn bản, mức chồng lắp từ vựng và các vấn đề chất lượng dữ liệu.
+  \item Xây dựng pipeline tiền xử lý phù hợp với dữ liệu mạng xã hội, vừa giảm nhiễu vừa giữ lại tín hiệu cảm xúc như emoji, cường điệu ký tự và cấu trúc câu.
+  \item Huấn luyện và đánh giá nhiều nhóm mô hình: học máy truyền thống, học sâu dùng embedding tiền huấn luyện và mô hình Transformer fine-tuned.
+  \item Phân tích kết quả theo macro F1, precision, recall, tốc độ suy luận giữa các lớp.
+  \item Xây dựng demo NeuroDetect v2.0 cho phép nhập văn bản, gọi backend dự đoán và so sánh kết quả giữa các mô hình.
+\end{enumerate}
+
+\section{Phạm vi và đóng góp}
+
+\manualindent%
+Trong phạm vi đồ án, nhóm tập trung vào văn bản tiếng Anh và bốn nhãn sức khỏe tinh thần nêu trên. Đồ án không thực hiện chẩn đoán lâm sàng và không xử lý dữ liệu đa phương thức như ảnh, âm thanh hoặc lịch sử người dùng. Các thí nghiệm được thực hiện trên dữ liệu có sẵn, sau khi nhóm kiểm tra rò rỉ dữ liệu, làm sạch và chia lại tập train, validation, test.
+
+\manualindent%
+Các đóng góp chính của nhóm gồm: phân tích EDA có định hướng mô hình hóa, pipeline cleaning cho dữ liệu mạng xã hội, so sánh năm mô hình thuộc ba họ phương pháp, phân tích thủ công một phần dữ liệu để chỉ ra nhiễu nhãn, và triển khai dashboard demo kết nối backend FastAPI chạy trên Kaggle qua ngrok.
+
+\section{Cấu trúc báo cáo}
+
+\manualindent%
+Chương 2 trình bày dữ liệu và các phát hiện EDA quan trọng. Chương 3 mô tả pipeline tiền xử lý và biểu diễn đặc trưng. Chương 4 trình bày các mô hình được sử dụng. Chương 5 nêu thiết lập thực nghiệm, kết quả và phân tích lỗi. Chương 6 tổng kết, chỉ ra hạn chế và đề xuất hướng phát triển.
+
+% =========================
+% Chapter 2
+% =========================
+\chapter{DỮ LIỆU VÀ PHÂN TÍCH KHÁM PHÁ}
+
+\section{Nguồn gốc dữ liệu}
+
+\manualindent%
+Bộ dữ liệu của đồ án là một tập dữ liệu phái sinh, được kết hợp và chuẩn hóa từ nhiều nguồn công khai liên quan đến sức khỏe tinh thần, trong đó có dữ liệu từ Kaggle và GitHub. Dữ liệu chủ yếu gồm các bài viết hoặc đoạn văn bản mạng xã hội, đặc biệt là các diễn đàn trực tuyến liên quan đến sức khỏe tâm thần.
+
+\manualindent%
+Hai tập dữ liệu ban đầu gồm:
+
+\begin{itemize}
+  \item \texttt{mental\_heath\_unbanlanced.csv}: 49.612 mẫu thô, phân bố nhãn không cân bằng.
+  \item \texttt{mental\_health\_combined\_test.csv}: 992 mẫu test cân bằng, mỗi nhãn có 248 mẫu.
+\end{itemize}
+
+\manualindent%
+Khi kiểm tra rò rỉ dữ liệu, nhóm phát hiện 496 văn bản trong tập test cân bằng cũng xuất hiện trong tập train thô, tương đương 50\% tập test ban đầu. Vì vậy, nhóm không dùng trực tiếp split có sẵn mà gộp dữ liệu, loại bỏ các trường hợp trùng lặp hoặc thiếu nhất quán, sau đó chia lại tập dữ liệu theo tỷ lệ 70\%-15\%-15\%.
+
+\section{Phân bố nhãn}
+
+\manualindent%
+Bảng \ref{tab:data-distribution} trình bày phân bố nhãn ở các giai đoạn chính. Dữ liệu thô có mức mất cân bằng đáng kể: lớp \textit{Normal} chiếm nhiều nhất, trong khi \textit{Anxiety} là lớp ít nhất.
+
+\begin{table}[H]
+  \centering
+  \caption{Phân bố nhãn trong các tập dữ liệu}
+  \label{tab:data-distribution}
+  \small
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Tập dữ liệu & Tổng & Normal & Depression & Suicidal & Anxiety \\
+    \midrule
+    Raw unbalanced & 49.612 & 18.391 & 14.506 & 11.212 & 5.503 \\
+    Raw balanced test & 992 & 248 & 248 & 248 & 248 \\
+    Train split & 34.600 & 12.705 & 10.154 & 7.840 & 3.901 \\
+    Validation split & 7.416 & 2.723 & 2.177 & 1.680 & 836 \\
+    Test split & 7.415 & 2.723 & 2.176 & 1.680 & 836 \\
+    Train clean & 33.682 & 11.858 & 10.126 & 7.826 & 3.872 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\manualindent%
+Tập train sau khi chia có tỷ lệ xấp xỉ: Normal 36,7\%, Depression 29,3\%, Suicidal 22,7\%, Anxiety 11,3\%. Tỷ lệ mất cân bằng giữa lớp lớn nhất và nhỏ nhất là khoảng 3,26:1. Đây không phải mất cân bằng cực đoan, nhưng đủ để ảnh hưởng đến recall của lớp thiểu số nếu mô hình tối ưu theo accuracy.
+
+\section{Đặc trưng độ dài văn bản}
+
+\manualindent%
+Phân tích EDA cho thấy độ dài văn bản khác biệt rõ giữa lớp \textit{Normal} và các lớp bệnh lý. Lớp \textit{Normal} thường gồm các câu ngắn, hội thoại xã giao hoặc cập nhật đời sống. Ngược lại, \textit{Depression}, \textit{Suicidal} và \textit{Anxiety} thường dài hơn nhiều, chứa các mô tả chi tiết về cảm xúc, hoàn cảnh và suy nghĩ lặp lại.
+
+\manualindent%
+Theo báo cáo EDA, số từ trung bình toàn tập train là 79,3 và trung vị là 48. Riêng nhóm Normal có độ dài trung bình khoảng 24-25 từ, trong khi các nhóm bệnh lý thường nằm quanh 107-127 từ. Điều này phản ánh hiện tượng người gặp bất ổn tâm lý có xu hướng viết dài hơn, lan man hơn và lặp lại các suy nghĩ tiêu cực hoặc bế tắc.
+
+\manualindent%
+Phát hiện này có hai hệ quả mô hình hóa. Thứ nhất, độ dài văn bản là một tín hiệu có ích nhưng cũng có thể gây thiên lệch, vì mô hình có thể học shortcut rằng văn bản ngắn thường là Normal. Thứ hai, các mô hình sequence như BiLSTM và BERT cần lựa chọn độ dài tối đa hợp lý để cân bằng giữa giữ thông tin và chi phí tính toán.
+
+\section{Đặc trưng từ vựng và mức chồng lắp nhãn}
+
+\manualindent%
+Các phân tích unigram, bigram và TF-IDF cho thấy mỗi lớp có một số tín hiệu ngôn ngữ đặc trưng. Lớp \textit{Anxiety} thường xuất hiện các từ và cụm từ liên quan đến lo âu hoặc triệu chứng cơ thể như \textit{panic attack}, \textit{heart}, \textit{breath}, \textit{chest pain}. Lớp \textit{Suicidal} có các cụm trực tiếp hơn như \textit{want die}, \textit{kill myself}, \textit{end life}. Lớp \textit{Depression} dùng nhiều ngôn ngữ tự quy chiếu và cảm xúc như \textit{feel}, \textit{life}, \textit{tired}, \textit{alone}, \textit{hopeless}.
+
+\manualindent%
+Tuy nhiên, thách thức lớn nhất là độ chồng lắp giữa \textit{Depression} và \textit{Suicidal}. Phân tích centroid TF-IDF cho thấy cosine similarity giữa hai lớp này lên tới khoảng 0,919. Điều này nghĩa là nếu chỉ dựa vào bề mặt từ vựng, hai lớp gần như rất khó tách biệt. Mô hình cần hiểu mức độ nghiêm trọng, chủ thể, ngữ cảnh, phủ định, ý định và kế hoạch tự hại.
+
+\section{Vấn đề chất lượng dữ liệu}
+
+\manualindent%
+Dữ liệu mạng xã hội chứa nhiều nhiễu tự nhiên. Báo cáo EDA ghi nhận một số vấn đề nổi bật: ký tự Unicode hoặc non-ASCII xuất hiện ở khoảng 11,48\% mẫu; URL xuất hiện ở khoảng 1,79\%; mention người dùng ở khoảng 1,77\%; ký tự lặp dài xuất hiện ở khoảng 1,70\%. Ngoài ra còn có văn bản cực ngắn, hashtag, HTML hiếm gặp, lỗi mã hóa và biểu tượng cảm xúc.
+
+\manualindent%
+Nhóm không loại bỏ toàn bộ các tín hiệu này một cách cứng nhắc. Ví dụ, emoji được chuyển thành mô tả bằng chữ thay vì xóa, vì emoji có thể mang sắc thái cảm xúc mạnh. URL và mention được chuẩn hóa thành placeholder để giữ lại thông tin rằng người viết có tham chiếu ra ngoài hoặc giao tiếp với người khác, nhưng tránh để mô hình học các chuỗi ngẫu nhiên.
+
+\section{Phân tích thủ công}
+
+\manualindent%
+File \texttt{Manual Analysis - Hy.csv} gồm 20 mẫu được phân tích thủ công, chia đều theo bốn nhãn gốc. Với mỗi mẫu, người phân tích ghi lại nhãn gốc, mã cấp 1, mã cấp 2, bằng chứng từ văn bản và nhận xét liệu nhãn gốc có phù hợp hay không. Kết quả có 16/20 mẫu được đánh giá là phù hợp và 4/20 mẫu có vấn đề nhãn.
+
+\manualindent%
+Theo yêu cầu đồ án, nhóm 3 sinh viên cần nộp phần phân tích thủ công khoảng 60-70 mẫu từ ngữ liệu đã công bố. Vì vậy, 20 mẫu hiện tại nên được xem là phần phân tích bước đầu của một thành viên; trước khi nộp chính thức, nhóm cần bổ sung thêm khoảng 40-50 mẫu để đạt số lượng yêu cầu. Cấu trúc file hiện tại đã phù hợp để mở rộng: mỗi dòng gồm văn bản gốc, nhãn gốc, mã cấp 1, mã cấp 2, bằng chứng, trạng thái khớp nhãn và ghi chú.
+
+\begin{table}[H]
+  \centering
+  \caption{Tóm tắt phân tích thủ công 20 mẫu}
+  \label{tab:manual-analysis}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    Nhóm & Normal & Anxiety & Depression & Suicidal \\
+    \midrule
+    Nhãn gốc & 5 & 5 & 5 & 5 \\
+    Mã cấp 1 sau phân tích & 5 & 5 & 4 & 6 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\manualindent%
+Hai dạng nhiễu nổi bật được phát hiện là \textit{nhiễu chủ thể} và \textit{ranh giới mờ}. Với nhiễu chủ thể, văn bản có thể nhắc đến người thân bị trầm cảm, nhưng bản thân người viết chỉ đang hỏi cách hỗ trợ; nếu chỉ nhìn từ khóa, mẫu dễ bị gán nhãn Depression dù nội dung nên gần với Normal hoặc Support Seeking. Với ranh giới mờ, văn bản có nhắc đến suy nghĩ tự sát nhưng nhãn gốc lại là Depression; trong bối cảnh hệ thống cảnh báo sớm, nhóm cho rằng các tín hiệu tự sát trực tiếp cần được ưu tiên xem xét ở lớp Suicidal.
+
+\begin{table}[H]
+  \centering
+  \caption{Một số mã phân tích thủ công tiêu biểu}
+  \label{tab:manual-codes}
+  \small
+  \begin{tabularx}{\textwidth}{p{2.8cm}p{3.5cm}X}
+    \toprule
+    Nhãn/mã & Bằng chứng ngắn & Diễn giải \\
+    \midrule
+    Normal: Happy & ``so happy'', ``son is back'' & Cảm xúc vui mừng trực tiếp, không có dấu hiệu bất ổn tâm lý. \\
+    Anxiety: Uncertainty & ``life is chaos'', ``fear of the uncertain'' & Lo âu gắn với cảm giác hỗn loạn và sợ điều không chắc chắn. \\
+    Depression: Apathy & ``lost all interest'', ``so drained'' & Mất hứng thú và cạn kiệt năng lượng, phù hợp biểu hiện trầm cảm. \\
+    Suicidal: Immediate Intent & ``end it'', ``bridge'', ``in an hour'' & Có ý định, địa điểm, thời gian và phương thức rõ ràng, mức rủi ro cao. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% =========================
+% Chapter 3
+% =========================
+\chapter{TIỀN XỬ LÝ VÀ BIỂU DIỄN ĐẶC TRƯNG}
+
+\section{Chia dữ liệu và chống rò rỉ}
+
+\manualindent%
+Notebook \texttt{CS221\_SPLIT\_DATA.ipynb} thực hiện kiểm tra overlap giữa tập train thô và tập test cân bằng. Sau khi phát hiện rò rỉ 496 văn bản, nhóm gộp dữ liệu, kiểm tra trùng lặp theo nội dung \texttt{text}, loại bỏ các văn bản có nhãn không nhất quán và chia lại bằng stratified split. Cách chia này giúp bảo toàn tỷ lệ nhãn giữa train, validation và test, đồng thời giảm nguy cơ mô hình được đánh giá trên các mẫu đã thấy trong huấn luyện.
+
+\section{Pipeline làm sạch văn bản}
+
+\manualindent%
+Notebook \texttt{CS221\_CLEANING.ipynb} xây dựng pipeline làm sạch theo thứ tự có chủ đích:
+
+\begin{enumerate}[label=\arabic*.]
+  \item Sửa lỗi mã hóa và mojibake bằng \texttt{ftfy}.
+  \item Chuyển emoji thành mô tả văn bản bằng \texttt{emoji.demojize}.
+  \item Chuẩn hóa URL thành \texttt{<url>}.
+  \item Chuẩn hóa mention thành \texttt{<username>}.
+  \item Tách hashtag thành nội dung chữ thay vì xóa toàn bộ.
+  \item Giảm ký tự lặp quá dài để tránh nhiễu nhưng vẫn giữ cảm xúc nhấn mạnh.
+  \item Chuẩn hóa Unicode, dấu câu thông minh, dấu gạch ngang, ellipsis và khoảng trắng.
+  \item Tùy chọn giữ nguyên chữ hoa cho BERT hoặc chuyển lowercase cho các mô hình truyền thống.
+\end{enumerate}
+
+\manualindent%
+Sau cleaning, tập train giảm từ 34.600 xuống 33.682 mẫu, chủ yếu do loại bỏ văn bản rỗng hoặc không còn đủ thông tin sau tiền xử lý. Validation và test giữ nguyên số mẫu lần lượt là 7.416 và 7.415.
+
+\begin{figure}[H]
+  \centering
+  \placeholderfigure{Placeholder: sơ đồ pipeline tổng quát từ dữ liệu thô, kiểm tra leakage, cleaning, chia train/val/test, huấn luyện mô hình và đánh giá.}
+  \caption{Pipeline xử lý dữ liệu và huấn luyện của đồ án}
+  \label{fig:pipeline}
+\end{figure}
+
+\section{Biểu diễn đặc trưng cho Machine Learning}
+
+\manualindent%
+Với Linear SVM và LightGBM, nhóm sử dụng không gian đặc trưng kết hợp 11.002 chiều. Thành phần chính là TF-IDF word n-gram với \texttt{ngram\_range=(1,3)}, tối đa 10.000 đặc trưng, \texttt{sublinear\_tf=True} và \texttt{min\_df=2}. Bên cạnh đó, nhóm thêm TF-IDF character n-gram với \texttt{ngram\_range=(3,5)}, tối đa 1.000 đặc trưng. Character n-gram giúp mô hình bền hơn trước lỗi chính tả, teencode và biến thể từ lóng.
+
+\manualindent%
+Với một từ hoặc n-gram $t$ trong văn bản $d$, trọng số TF-IDF được tính theo:
+
+\begin{equation}
+  \mathrm{tfidf}(t,d)
+  = \mathrm{tf}(t,d) \times \log\left(\frac{N+1}{\mathrm{df}(t)+1}\right),
+  \label{eq:tfidf}
+\end{equation}
+
+trong đó $N$ là tổng số văn bản trong tập huấn luyện, $\mathrm{tf}(t,d)$ là tần suất của $t$ trong văn bản $d$, còn $\mathrm{df}(t)$ là số văn bản có chứa $t$. Việc dùng \texttt{sublinear\_tf=True} tương ứng với việc giảm ảnh hưởng của các từ lặp lại quá nhiều bằng biến đổi log trên tần suất.
+
+\manualindent%
+Ngoài TF-IDF, notebook còn bổ sung một số đặc trưng thống kê dạng sparse như độ dài văn bản, số từ, số câu, độ dài trung bình từ, số dấu chấm hỏi, dấu chấm than hoặc tỷ lệ ký tự đặc biệt. Các đặc trưng này giúp mô hình truyền thống tận dụng thông tin cấu trúc mà TF-IDF không nắm bắt trực tiếp.
+
+\section{Biểu diễn cho Deep Learning}
+
+\manualindent%
+Với TextCNN và BiLSTM, văn bản được token hóa bằng \texttt{nltk.word\_tokenize}, xây dựng từ vựng từ tập train với \texttt{min\_freq=2}, sau đó mã hóa thành chuỗi chỉ số có độ dài tối đa 256 token. Nhóm sử dụng embedding tiền huấn luyện 300 chiều, trong đó GloVe 840B cho kết quả tốt hơn FastText trong thực nghiệm của nhóm. Embedding được freeze trong quá trình huấn luyện để giảm overfitting.
+
+\manualindent%
+Việc freeze embedding là một quyết định quan trọng. Khi unfreeze, mô hình học sâu có xu hướng ghi nhớ tập train nhanh hơn và giảm khả năng tổng quát hóa trên validation/test. Với dữ liệu có nhiễu nhãn và mất cân bằng, giữ embedding ổn định giúp mô hình học lớp phân loại phía trên một cách chắc hơn.
+
+\manualindent%
+Các mô hình neural network đều đưa vector ẩn cuối cùng qua lớp tuyến tính để thu được logits $\mathbf{z} \in \mathbb{R}^{4}$. Xác suất dự đoán cho lớp $k$ được tính bằng softmax:
+
+\begin{equation}
+  p(y=k \mid x) = \frac{\exp(z_k)}{\sum_{j=1}^{4}\exp(z_j)}.
+  \label{eq:softmax}
+\end{equation}
+
+Hàm mất mát cross-entropy cho một mẫu có nhãn thật $y$ là:
+
+\begin{equation}
+  \mathcal{L}(x,y) = -\log p(y \mid x).
+  \label{eq:crossentropy}
+\end{equation}
+
+\section{Biểu diễn cho BERT}
+
+\manualindent%
+Mô hình BERT sử dụng tokenizer của \texttt{bert-base-uncased}. Văn bản được token hóa thành WordPiece, thêm token đặc biệt \texttt{[CLS]} và \texttt{[SEP]}, padding/truncation, attention mask và token type id. Vector tại \texttt{[CLS]} được đưa qua classifier head để dự đoán bốn nhãn.
+
+\manualindent%
+Do BERT có giới hạn độ dài đầu vào, các văn bản quá dài sẽ bị cắt. Theo EDA, chỉ một tỷ lệ nhỏ văn bản vượt quá ngân sách 512 token, nhưng các outlier này thường nằm ở nhóm bệnh lý và có thể chứa thông tin quan trọng ở cuối bài viết. Đây là một hạn chế cần lưu ý khi triển khai thực tế.
+
+\begin{figure}[H]
+  \centering
+  \placeholderfigure{Placeholder: sơ đồ biểu diễn đầu vào cho BERT gồm tokenization, [CLS], [SEP], padding, attention mask và classifier head.}
+  \caption{Minh họa quy trình mã hóa văn bản cho BERT}
+  \label{fig:bert-input}
+\end{figure}
+
+% =========================
+% Chapter 4
+% =========================
+\chapter{MÔ HÌNH VÀ PHƯƠNG PHÁP}
+
+\section{Linear SVM}
+
+\manualindent%
+Linear SVM được dùng làm baseline mạnh cho dữ liệu văn bản sparse. Mô hình hoạt động tốt với TF-IDF, có tốc độ huấn luyện và suy luận nhanh, đồng thời dễ tối ưu siêu tham số. Nhóm dùng Optuna để tìm hệ số regularization $C$ với 15 trial và đánh giá bằng 5-fold cross validation theo macro F1. Giá trị tốt nhất trong notebook là $C = 0{,}2051$.
+
+\manualindent%
+Với biểu diễn đặc trưng $\mathbf{x}_i$ và nhãn $y_i$, SVM tuyến tính học siêu phẳng phân tách bằng cách tối ưu bài toán regularized hinge loss:
+
+\begin{equation}
+  \min_{\mathbf{w},b}
+  \frac{1}{2}\|\mathbf{w}\|_2^2
+  + C \sum_{i=1}^{n} \max\left(0, 1 - y_i(\mathbf{w}^{\top}\mathbf{x}_i + b)\right).
+  \label{eq:svm}
+\end{equation}
+
+Trong bài toán đa lớp, thư viện triển khai chiến lược mở rộng nội bộ để dự đoán một trong bốn nhãn.
+
+\manualindent%
+Ưu điểm của SVM là đơn giản, nhanh và khó overfit quá mức khi đặc trưng sparse được chuẩn hóa tốt. Hạn chế là mô hình tuyến tính khó nắm bắt quan hệ ngữ nghĩa sâu, nhất là khi cùng một từ khóa xuất hiện trong nhiều ngữ cảnh khác nhau.
+
+\section{LightGBM}
+
+\manualindent%
+LightGBM được dùng như một mô hình boosting trên không gian đặc trưng TF-IDF kết hợp thống kê. Mô hình có khả năng học tương tác phi tuyến giữa các đặc trưng và xử lý dữ liệu lớn hiệu quả. Nhóm sử dụng cấu hình multiclass, 2.000 estimators, learning rate 0,1, \texttt{num\_leaves=31}, subsample 0,8, colsample 0,8, regularization L1/L2 và \texttt{class\_weight=balanced}. Early stopping 50 vòng được dùng trên validation nội bộ.
+
+\manualindent%
+So với SVM, LightGBM cải thiện nhẹ macro F1, nhưng mức tăng không lớn. Điều này cho thấy đặc trưng TF-IDF vẫn là yếu tố quyết định chính; mô hình boosting khó vượt xa nếu biểu diễn chưa đủ ngữ cảnh.
+
+\section{TextCNN}
+
+\manualindent%
+TextCNN dùng các bộ lọc tích chập một chiều với kích thước 3, 4 và 5 để học các cụm từ cục bộ. Sau convolution và ReLU, mô hình dùng max pooling trên thời gian để lấy tín hiệu mạnh nhất của từng filter, ghép lại và đưa qua lớp fully connected. Số filter mỗi kích thước là 128, dropout là 0,4.
+
+\manualindent%
+Với ma trận embedding của câu là $\mathbf{X}$, một filter tích chập kích thước $h$ sinh đặc trưng cục bộ:
+
+\begin{equation}
+  c_i = \mathrm{ReLU}\left(\mathbf{W} \cdot \mathbf{X}_{i:i+h-1} + b\right),
+  \qquad
+  \hat{c} = \max_i c_i.
+  \label{eq:textcnn}
+\end{equation}
+
+Giá trị $\hat{c}$ là tín hiệu mạnh nhất mà filter tìm thấy trong toàn câu, giúp mô hình bắt các cụm từ rủi ro xuất hiện ở bất kỳ vị trí nào.
+
+\manualindent%
+TextCNN phù hợp với các tín hiệu cụm từ ngắn như \textit{panic attack}, \textit{kill myself}, \textit{feel like}. Mô hình có tốc độ suy luận nhanh và chi phí thấp hơn BERT, nhưng hạn chế ở khả năng mô hình hóa phụ thuộc dài hoặc ngữ cảnh xuất hiện cách xa nhau.
+
+\section{BiLSTM kết hợp Attention}
+
+\manualindent%
+BiLSTM đọc chuỗi token theo hai chiều, giúp mô hình nắm bắt cả ngữ cảnh trước và sau mỗi từ. Trong kiến trúc của nhóm, embedding 300 chiều được đưa qua dropout, sau đó qua LSTM hai chiều với hidden size 128. Đầu ra theo thời gian được đưa vào attention pooling để mô hình học trọng số cho các token quan trọng trước khi phân loại.
+
+\manualindent%
+Gọi $\mathbf{h}_t$ là hidden state hai chiều tại vị trí $t$, attention pooling tính trọng số cho từng token như sau:
+
+\begin{align}
+  e_t &= \mathbf{v}^{\top}\tanh(\mathbf{W}\mathbf{h}_t), \\
+  \alpha_t &= \frac{\exp(e_t)}{\sum_{j=1}^{T}\exp(e_j)}, \\
+  \mathbf{c} &= \sum_{t=1}^{T}\alpha_t \mathbf{h}_t.
+  \label{eq:attention}
+\end{align}
+
+Vector ngữ cảnh $\mathbf{c}$ sau đó được đưa vào lớp phân loại. Cơ chế này giúp mô hình đặt trọng số cao hơn lên các đoạn như \textit{want to die}, \textit{panic attack} hoặc \textit{lost all interest}.
+
+\manualindent%
+Attention pooling giúp BiLSTM tập trung vào các cụm mang tín hiệu rủi ro cao, thay vì chỉ dựa vào hidden state cuối. Thực nghiệm cho thấy BiLSTM + Attention vượt TextCNN, đặc biệt ở các lớp cần hiểu chuỗi cảm xúc dài như Depression và Suicidal.
+
+\begin{figure}[H]
+  \centering
+  \placeholderfigure{Placeholder: sơ đồ kiến trúc TextCNN và BiLSTM + Attention, gồm embedding layer, convolution/LSTM, pooling/attention và classifier.}
+  \caption{Minh họa hai kiến trúc học sâu chính trong đồ án}
+  \label{fig:dl-architectures}
+\end{figure}
+
+\section{Fine-tuning BERT}
+
+\manualindent%
+BERT-base-uncased là mô hình Transformer hai chiều gồm 12 layer, hidden size 768 và khoảng 110 triệu tham số. Trong đồ án, nhóm fine-tune BERT cho bài toán phân loại bốn lớp bằng cách thêm classifier head trên vector \texttt{[CLS]}. Quá trình fine-tuning chạy 5 epoch, batch size hiệu dụng 128 trên môi trường Kaggle GPU, scheduler cosine, validation theo từng epoch và chọn checkpoint tốt nhất.
+
+\manualindent%
+BERT có lợi thế lớn ở khả năng học ngữ cảnh hai chiều và biểu diễn đa nghĩa. Đây là yếu tố quan trọng với dữ liệu sức khỏe tinh thần, nơi cùng một từ như \textit{depressed}, \textit{die}, \textit{tired} có thể mang nghĩa khác nhau tùy chủ thể, phủ định và mức độ trực tiếp của ý định.
+
+\section{Ví dụ minh họa từ ngữ liệu}
+
+\manualindent%
+Để làm rõ cách các phương pháp xử lý dữ liệu, nhóm chọn một số mẫu ngắn từ phần phân tích thủ công. Với mẫu \textit{``morning. Has anyone woken up yet?''}, các mô hình dựa trên TF-IDF nhận được rất ít từ khóa tâm lý, trong khi đặc trưng độ dài cũng cho thấy đây là một câu giao tiếp ngắn; nhãn \textit{Normal} vì vậy khá dễ dự đoán.
+
+\manualindent%
+Với mẫu \textit{``My life is chaos. There is no solution. Fear of the uncertain.''}, các cụm như \textit{chaos}, \textit{no solution}, \textit{fear} và \textit{uncertain} là tín hiệu mạnh cho \textit{Anxiety}. SVM/LightGBM có thể dựa vào unigram và bigram, còn BiLSTM/BERT có thêm lợi thế đọc mạch câu để thấy cảm giác bất định kéo dài.
+
+\manualindent%
+Với mẫu Depression có đoạn \textit{``lost all interest''} và \textit{``so drained''}, dấu hiệu chính không phải một từ khóa đơn lẻ mà là trạng thái cạn kiệt năng lượng, mất quan tâm đến quan hệ xã hội và không biết cách thoát ra. Đây là loại mẫu mà mô hình ngữ cảnh như BiLSTM hoặc BERT có lợi thế hơn mô hình tuyến tính.
+
+\manualindent%
+Với mẫu Suicidal có bằng chứng \textit{``I want to end it''}, kèm thời gian và địa điểm cụ thể, hệ thống cần ưu tiên recall cho lớp rủi ro cao. Trong demo, các trường hợp có xác suất Suicidal cao được dùng để kích hoạt cảnh báo, thay vì chỉ hiển thị như một nhãn cảm xúc thông thường.
+
+\section{Demo NeuroDetect v2.0}
+
+\manualindent%
+Ngoài phần huấn luyện, nhóm xây dựng giao diện demo NeuroDetect v2.0. Frontend là dashboard HTML/CSS/JavaScript, kết nối với backend FastAPI chạy trên Kaggle thông qua ngrok. Người dùng có thể nhập văn bản, gửi đến API và nhận kết quả dự đoán từ các mô hình đã nạp. Giao diện cũng hỗ trợ so sánh xác suất giữa các mô hình và kích hoạt cảnh báo khi văn bản được phân loại là \textit{Suicidal} với độ tin cậy cao.
+
+\begin{figure}[H]
+  \centering
+  \placeholderfigure{Placeholder: ảnh chụp giao diện NeuroDetect v2.0, gồm ô nhập văn bản, lựa chọn mô hình, kết quả dự đoán và biểu đồ xác suất.}
+  \caption{Giao diện demo NeuroDetect v2.0}
+  \label{fig:demo-ui}
+\end{figure}
+
+% =========================
+% Chapter 5
+% =========================
+\chapter{THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}
+
+\section{Thiết lập thực nghiệm}
+
+\manualindent%
+Các mô hình được đánh giá trên tập test cố định gồm 7.415 mẫu. Độ đo chính là macro F1, vì mỗi lớp đóng góp ngang nhau vào điểm cuối bất kể số lượng mẫu. Ngoài ra, nhóm báo cáo precision, recall, accuracy, F1 theo từng lớp, thời gian huấn luyện và độ trễ suy luận trung bình trên mỗi mẫu.
+
+\manualindent%
+Thứ tự nhãn trong các báo cáo học sâu là \textit{Normal}, \textit{Depression}, \textit{Suicidal}, \textit{Anxiety}. Khi so sánh tổng thể, nhóm quy đổi về macro precision, macro recall và macro F1 để tránh nhầm lẫn do thứ tự nhãn khác nhau giữa các notebook.
+
+\manualindent%
+Với mỗi lớp $k$, precision, recall và F1-score được tính như sau:
+
+\begin{align}
+  \mathrm{Precision}_k &= \frac{TP_k}{TP_k + FP_k}, \\
+  \mathrm{Recall}_k &= \frac{TP_k}{TP_k + FN_k}, \\
+  \mathrm{F1}_k &= \frac{2 \times \mathrm{Precision}_k \times \mathrm{Recall}_k}
+  {\mathrm{Precision}_k + \mathrm{Recall}_k}.
+  \label{eq:precision-recall-f1}
+\end{align}
+
+Macro F1 là trung bình F1 trên toàn bộ $K=4$ lớp:
+
+\begin{equation}
+  \mathrm{MacroF1} = \frac{1}{K}\sum_{k=1}^{K}\mathrm{F1}_k.
+  \label{eq:macro-f1}
+\end{equation}
+
+Độ đo này phù hợp với dữ liệu mất cân bằng vì lớp ít mẫu như \textit{Anxiety} vẫn có trọng số ngang với lớp nhiều mẫu như \textit{Normal}.
+
+\section{Kết quả tổng quan}
+
+\begin{table}[H]
+  \centering
+  \caption{So sánh kết quả chính trên tập test}
+  \label{tab:model-main-results}
+  \small
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Mô hình & Macro P & Macro R & Macro F1 & Train time & Latency \\
+    \midrule
+    Linear SVM & 0,7744 & 0,7862 & 0,7791 & 1m01s & 0,03 ms \\
+    LightGBM & 0,7819 & 0,7883 & 0,7847 & 4m56s & 0,15 ms \\
+    TextCNN & 0,8104 & 0,8226 & 0,8131 & 20m11s & 0,61 ms \\
+    BiLSTM + Attention & 0,8261 & 0,8358 & 0,8299 & 28m36s & 0,66 ms \\
+    Fine-tuned BERT & 0,8425 & 0,8553 & 0,8474 & 1h27m30s & 9,89 ms \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\manualindent%
+Kết quả cho thấy chất lượng tăng dần theo khả năng biểu diễn ngữ cảnh của mô hình. Nhóm truyền thống đạt khoảng 0,78 macro F1, đủ tốt để làm baseline và có tốc độ rất nhanh. TextCNN và BiLSTM cải thiện rõ rệt nhờ embedding tiền huấn luyện và khả năng học mẫu cục bộ hoặc chuỗi. BERT đạt kết quả cao nhất, nhưng đánh đổi bằng thời gian huấn luyện dài và độ trễ suy luận cao hơn đáng kể.
+
+\section{Kết quả theo từng lớp}
+
+\begin{table}[H]
+  \centering
+  \caption{F1-score theo từng lớp}
+  \label{tab:per-class-f1}
+  \small
+  \begin{tabular}{lrrrr}
+    \toprule
+    Mô hình & Normal & Depression & Suicidal & Anxiety \\
+    \midrule
+    Linear SVM & 0,9219 & 0,7049 & 0,6881 & 0,8016 \\
+    LightGBM & 0,9264 & 0,7072 & 0,6913 & 0,8199 \\
+    TextCNN & 0,9406 & 0,7252 & 0,7375 & 0,8494 \\
+    BiLSTM + Attention & 0,9445 & 0,7609 & 0,7531 & 0,8611 \\
+    Fine-tuned BERT & 0,9532 & 0,7790 & 0,7775 & 0,8798 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\manualindent%
+Lớp \textit{Normal} luôn có F1 cao nhất, vì văn bản bình thường thường ngắn hơn và khác biệt rõ so với các lớp bệnh lý. Lớp \textit{Anxiety} dù ít mẫu nhất nhưng đạt F1 khá cao ở các mô hình mạnh, do có nhiều tín hiệu đặc trưng như \textit{panic}, \textit{anxious}, \textit{heart}, \textit{breath}. Hai lớp khó nhất là \textit{Depression} và \textit{Suicidal}, đúng với phân tích EDA về độ chồng lắp từ vựng.
+
+\section{Phân tích nhóm Machine Learning}
+
+\manualindent%
+Linear SVM đạt macro F1 0,7791 với thời gian huấn luyện khoảng 1 phút và suy luận rất nhanh. Đây là baseline đáng tin cậy cho bài toán văn bản, đặc biệt khi cần triển khai trong môi trường tài nguyên hạn chế. LightGBM đạt 0,7847, nhỉnh hơn SVM nhưng không tạo bước nhảy lớn. Kết quả này cho thấy TF-IDF word/char n-gram đã khai thác phần lớn tín hiệu bề mặt, còn mô hình phi tuyến chưa đủ để giải quyết các trường hợp cần hiểu sâu ngữ cảnh.
+
+\manualindent%
+Điểm yếu chung của hai mô hình truyền thống là nhầm lẫn giữa Depression và Suicidal. Khi văn bản chứa các từ khóa tiêu cực nhưng chưa có kế hoạch tự hại rõ ràng, hoặc khi ý định tự sát được diễn đạt gián tiếp, mô hình dựa trên TF-IDF dễ bị kéo về lớp có từ vựng gần hơn.
+
+\section{Phân tích nhóm Deep Learning}
+
+\manualindent%
+TextCNN đạt macro F1 0,8131, cải thiện đáng kể so với SVM và LightGBM. Mô hình khai thác tốt các cụm từ ngắn có ý nghĩa phân biệt cao. Tuy nhiên, với các văn bản dài và cảm xúc phát triển theo mạch kể chuyện, TextCNN có thể bỏ sót quan hệ xa.
+
+\manualindent%
+BiLSTM + Attention đạt macro F1 0,8299, cao hơn TextCNN khoảng 1,7 điểm phần trăm. Lợi thế của BiLSTM nằm ở việc đọc chuỗi theo hai chiều và dùng attention để tập trung vào các đoạn quan trọng. Kết quả trên từng lớp cũng cho thấy BiLSTM cải thiện rõ ở Depression và Suicidal, hai lớp cần hiểu ngữ cảnh dài hơn.
+
+\section{Phân tích BERT}
+
+\manualindent%
+Fine-tuned BERT đạt macro F1 0,8474 và accuracy 0,8537, là mô hình tốt nhất trong thí nghiệm. BERT cải thiện tất cả các lớp so với BiLSTM, đặc biệt ở Anxiety và Normal. Điều này phù hợp với kỳ vọng vì Transformer có khả năng học biểu diễn ngữ cảnh tốt hơn, xử lý phụ thuộc dài và phân biệt tốt hơn giữa cách nhắc đến một trạng thái tâm lý và việc chính người viết đang mắc trạng thái đó.
+
+\manualindent%
+Dù vậy, BERT cũng là mô hình tốn tài nguyên nhất: thời gian huấn luyện khoảng 1 giờ 27 phút 30 giây và latency trung bình 9,89 ms/mẫu trong môi trường Kaggle GPU. Khi triển khai thực tế, cần cân nhắc giữa chất lượng, chi phí phần cứng và yêu cầu thời gian thực.
+
+\section{Ma trận nhầm lẫn và lỗi điển hình}
+
+\manualindent%
+Các báo cáo test của TextCNN, BiLSTM và BERT đều cho thấy hướng nhầm lẫn chính là giữa \textit{Depression} và \textit{Suicidal}. Với BiLSTM, recall của Suicidal đạt 0,7952 nhưng precision chỉ 0,7152, cho thấy mô hình có xu hướng bắt được nhiều mẫu tự sát nhưng cũng kéo một phần mẫu khác sang nhãn này. Với BERT, recall Suicidal tăng lên 0,8268, precision là 0,7338; đây là sự đánh đổi thường thấy trong bài toán cảnh báo rủi ro, vì bỏ sót mẫu nguy cơ cao thường nghiêm trọng hơn cảnh báo dư.
+
+\manualindent%
+Từ phân tích thủ công, nhóm ghi nhận ba lỗi điển hình:
+
+\begin{itemize}
+  \item \textbf{Nhiễu chủ thể}: văn bản nói về người khác đang trầm cảm, còn người viết chỉ đang tìm lời khuyên.
+  \item \textbf{Tín hiệu tự sát bị gán nhẹ}: văn bản có \textit{suicidal thought} nhưng nhãn gốc là Depression.
+  \item \textbf{Ngữ cảnh mỉa mai hoặc mơ hồ}: từ khóa tiêu cực xuất hiện nhưng không đủ để kết luận trạng thái tâm lý.
+\end{itemize}
+
+\manualindent%
+Những lỗi này không thể giải quyết hoàn toàn bằng việc tăng mô hình. Cần cải thiện chất lượng nhãn, xây dựng guideline gán nhãn rõ hơn và có thể thêm nhãn phụ như \textit{Support Seeking}, \textit{Third-person Mention}, \textit{Passive Ideation} hoặc \textit{Active Intent}.
+
+\section{Diễn giải một số mẫu đúng và sai}
+
+\manualindent%
+Do các notebook hiện lưu báo cáo tổng hợp và ma trận nhầm lẫn nhưng chưa lưu bảng dự đoán từng mẫu, phần diễn giải dưới đây dựa trên phân tích thủ công nhãn dữ liệu và các nhóm lỗi quan sát được. Khi nhóm xuất thêm file \texttt{y\_true}, \texttt{y\_pred} và xác suất dự đoán cho từng mẫu, bảng này có thể được thay bằng bảng lỗi thật của từng mô hình.
+
+\begin{table}[H]
+  \centering
+  \caption{Diễn giải mẫu đúng/sai từ phân tích thủ công}
+  \label{tab:correct-wrong-examples}
+  \small
+  \begin{tabularx}{\textwidth}{p{2.6cm}p{3.5cm}p{2.4cm}X}
+    \toprule
+    Loại mẫu & Trích đoạn ngắn & Nhãn gốc $\rightarrow$ phân tích & Diễn giải \\
+    \midrule
+    Đúng - Normal & ``so happy'', ``son is back'' & Normal $\rightarrow$ Normal & Cảm xúc tích cực, ngữ cảnh đoàn tụ gia đình, không có dấu hiệu lo âu hoặc trầm cảm. \\
+    Đúng - Anxiety & ``Fear of the uncertain'' & Anxiety $\rightarrow$ Anxiety & Nỗi sợ điều không chắc chắn là tín hiệu trực tiếp của lo âu. \\
+    Đúng - Suicidal & ``end it'', ``in an hour'' & Suicidal $\rightarrow$ Suicidal & Có ý định và thời gian cụ thể, cần được xem là rủi ro cao. \\
+    Sai - nhiễu chủ thể & ``someone close to me with depression'' & Depression $\rightarrow$ Normal & Người viết không tự mô tả mình bị trầm cảm, mà hỏi cách hỗ trợ người khác. \\
+    Sai - ranh giới mờ & ``suicidal thought'' & Depression $\rightarrow$ Suicidal & Nhãn gốc là Depression nhưng tín hiệu tự sát rõ, nên trong hệ cảnh báo nên ưu tiên Suicidal. \\
+    Sai - cảm xúc giao thoa & ``sad'', ``restless'', ``despair'' & Anxiety $\rightarrow$ Depression & Có cả bồn chồn và tuyệt vọng; nếu chỉ dựa vào một từ khóa như \textit{restless}, mô hình dễ nghiêng về Anxiety. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\manualindent%
+Nhìn từ các mẫu trên, lỗi không chỉ đến từ mô hình mà còn đến từ định nghĩa nhãn. Với bài toán sức khỏe tinh thần, một câu trả lời đúng về mặt benchmark chưa chắc đã là quyết định an toàn nhất trong ứng dụng cảnh báo sớm. Vì vậy, nhóm đề xuất khi triển khai cần báo cáo thêm recall của lớp \textit{Suicidal}, danh sách mẫu rủi ro bị bỏ sót, và một cơ chế kiểm duyệt thủ công cho các trường hợp biên.
+
+\section{Đánh đổi hiệu năng và tài nguyên}
+
+\manualindent%
+Nếu ưu tiên tốc độ và triển khai nhẹ, Linear SVM là lựa chọn hợp lý vì macro F1 gần 0,78 và latency rất thấp. Nếu cần cân bằng giữa chất lượng và chi phí, BiLSTM + Attention là điểm sáng: macro F1 0,8299, gần BERT hơn nhiều so với nhóm ML, nhưng suy luận nhanh hơn BERT đáng kể. Nếu ưu tiên chất lượng phân loại cao nhất, Fine-tuned BERT là lựa chọn tốt nhất trong phạm vi thí nghiệm.
+
+\manualindent%
+Từ góc độ sản phẩm, một kiến trúc thực tế có thể dùng mô hình nhẹ làm bộ lọc đầu tiên và dùng BERT cho các trường hợp có độ không chắc chắn cao hoặc có dấu hiệu rủi ro tự sát. Cách này giúp giảm chi phí suy luận mà vẫn tăng độ an toàn cho các mẫu quan trọng.
+
+% =========================
+% Chapter 6
+% =========================
+\chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
+
+\section{Kết luận}
+
+\manualindent%
+Đồ án đã xây dựng hoàn chỉnh pipeline phân loại văn bản sức khỏe tinh thần từ dữ liệu mạng xã hội, bao gồm kiểm tra dữ liệu, chống rò rỉ, tiền xử lý, huấn luyện năm mô hình, đánh giá kết quả và triển khai demo. Kết quả thực nghiệm cho thấy Fine-tuned BERT đạt chất lượng cao nhất với macro F1 0,8474, trong khi BiLSTM + Attention đạt 0,8299 và là lựa chọn cân bằng tốt giữa hiệu năng và chi phí.
+
+\manualindent%
+Các phân tích cũng cho thấy bài toán không chỉ là phân loại cảm xúc đơn giản. Mô hình cần hiểu chủ thể, mức độ nghiêm trọng, tín hiệu tự hại, ngữ cảnh phủ định và ranh giới mờ giữa Depression và Suicidal. Dữ liệu mạng xã hội mang nhiều nhiễu, nhưng đồng thời chứa các dấu hiệu cảm xúc rất quan trọng; vì vậy tiền xử lý cần thận trọng, tránh làm mất tín hiệu.
+
+\section{Hạn chế}
+
+\manualindent%
+Đồ án còn một số hạn chế. Thứ nhất, dữ liệu chỉ là văn bản tiếng Anh từ mạng xã hội, nên không đại diện cho hồ sơ lâm sàng hoặc hội thoại tư vấn chuyên môn. Thứ hai, nhãn dữ liệu có nhiễu và chưa có đánh giá liên chú giải viên trên diện rộng. Thứ ba, mô hình chưa được kiểm thử ngoài phân phối, ví dụ dữ liệu tiếng Việt, dữ liệu đa ngôn ngữ hoặc văn bản có mỉa mai. Thứ tư, hệ thống demo mới ở mức hỗ trợ học thuật, chưa có cơ chế can thiệp y tế, bảo mật dữ liệu và quy trình xử lý khẩn cấp.
+
+\section{Hướng phát triển}
+
+Các hướng phát triển tiếp theo gồm:
+
+\begin{enumerate}[label=\arabic*.]
+  \item Mở rộng và chuẩn hóa dữ liệu đa ngôn ngữ, đặc biệt là dữ liệu tiếng Việt liên quan đến sức khỏe tinh thần.
+  \item Thiết kế guideline gán nhãn chi tiết hơn cho các mức độ tự sát, phân biệt ý nghĩ thoáng qua, ý định rõ ràng, kế hoạch và hành vi đã xảy ra.
+  \item Áp dụng knowledge distillation để nén BERT thành mô hình nhỏ hơn, phù hợp triển khai real-time hoặc trên thiết bị tài nguyên hạn chế.
+  \item Kết hợp mô hình hai tầng: mô hình nhẹ sàng lọc toàn bộ dữ liệu, mô hình mạnh xử lý các ca rủi ro hoặc không chắc chắn.
+  \item Bổ sung giải thích mô hình bằng attention visualization, SHAP hoặc highlight từ khóa để người dùng hiểu vì sao hệ thống đưa ra cảnh báo.
+  \item Hoàn thiện dashboard cảnh báo sớm với quy trình phản hồi an toàn, nhấn mạnh rằng hệ thống chỉ hỗ trợ sàng lọc và không thay thế chuyên gia sức khỏe tinh thần.
+\end{enumerate}
+
+\section{Bài học rút ra}
+
+\manualindent%
+Qua đồ án, nhóm nhận thấy hiệu năng mô hình phụ thuộc mạnh vào chất lượng dữ liệu và cách định nghĩa nhãn. Với các bài toán nhạy cảm như sức khỏe tinh thần, điểm số tổng thể không đủ; cần phân tích theo từng lớp, đặc biệt là lớp có rủi ro cao. Một mô hình có macro F1 cao nhưng bỏ sót nhiều mẫu Suicidal vẫn không phù hợp cho hệ thống cảnh báo. Ngược lại, một mô hình có recall cao cho lớp rủi ro cần được kết hợp với cơ chế kiểm chứng để tránh cảnh báo sai quá nhiều.
+
+\manualindent%
+Đồ án cũng cho thấy giá trị của việc so sánh nhiều họ mô hình. SVM và LightGBM cung cấp baseline nhanh, TextCNN và BiLSTM cải thiện nhờ học biểu diễn chuỗi, còn BERT cho chất lượng tốt nhất nhờ hiểu ngữ cảnh sâu hơn. Sự đánh đổi giữa chất lượng và tài nguyên là yếu tố quan trọng khi chuyển từ notebook nghiên cứu sang hệ thống demo có khả năng sử dụng thực tế.
+
+% =========================
+% References
+% =========================
+\begin{thebibliography}{9}
+
+\bibitem{devlin-bert}
+J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova.
+\textit{BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding}.
+Proceedings of NAACL-HLT, 2019.
+
+\bibitem{kim-cnn}
+Y. Kim.
+\textit{Convolutional Neural Networks for Sentence Classification}.
+Proceedings of EMNLP, 2014.
+
+\bibitem{bilstm}
+P. Zhou, Z. Qi, S. Zheng, J. Xu, H. Bao, and B. Xu.
+\textit{Text Classification Improved by Integrating Bidirectional LSTM with Two-dimensional Max Pooling}.
+Proceedings of COLING, 2016.
+
+\bibitem{optuna}
+T. Akiba, S. Sano, T. Yanase, T. Ohta, and M. Koyama.
+\textit{Optuna: A Next-generation Hyperparameter Optimization Framework}.
+Proceedings of KDD, 2019.
+
+\bibitem{kaggle-dataset}
+S. Sarkar.
+\textit{Sentiment Analysis for Mental Health Dataset}.
+Kaggle, 2023.
+
+\bibitem{lightgbm}
+G. Ke, Q. Meng, T. Finley, T. Wang, W. Chen, W. Ma, Q. Ye, and T.-Y. Liu.
+\textit{LightGBM: A Highly Efficient Gradient Boosting Decision Tree}.
+Advances in Neural Information Processing Systems, 2017.
+
+\end{thebibliography}
+
+\end{document}

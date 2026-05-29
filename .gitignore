@@ -6,3 +6,5 @@ model.zip
 
 *.safetensors
 *.pt
+
+.venv/

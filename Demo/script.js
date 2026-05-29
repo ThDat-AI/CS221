@@ -11,6 +11,86 @@ const testCases = {
 let probChart = null;
 let metricsChart = null;
 let timeChart = null;
+
+const probabilityPercentLabels = {
+    id: 'probabilityPercentLabels',
+    afterDatasetsDraw(chart) {
+        const { ctx, chartArea } = chart;
+        const meta = chart.getDatasetMeta(0);
+        const dataset = chart.data.datasets[0];
+
+        ctx.save();
+        ctx.font = "900 13px 'Space Grotesk', sans-serif";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillStyle = '#111';
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 4;
+
+        meta.data.forEach((bar, index) => {
+            const value = Number(dataset.data[index]);
+            if (!Number.isFinite(value)) return;
+
+            const label = `${value.toFixed(2)}%`;
+            const y = Math.max(bar.y - 6, chartArea.top + 16);
+            ctx.strokeText(label, bar.x, y);
+            ctx.fillText(label, bar.x, y);
+        });
+
+        ctx.restore();
+    }
+};
+
+const metricValueLabels = {
+    id: 'metricValueLabels',
+    afterDatasetsDraw(chart) {
+        const { ctx, chartArea } = chart;
+
+        ctx.save();
+        ctx.font = "900 12px 'Space Grotesk', sans-serif";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillStyle = '#111';
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 4;
+
+        chart.data.datasets.forEach((dataset, datasetIndex) => {
+            if (dataset.showValueLabel === false) return;
+
+            const meta = chart.getDatasetMeta(datasetIndex);
+            if (meta.hidden) return;
+
+            meta.data.forEach((element, index) => {
+                const value = Number(dataset.data[index]);
+                if (!Number.isFinite(value)) return;
+
+                const suffix = dataset.valueSuffix || '';
+                const label = `${value.toFixed(2)}${suffix}`;
+                const y = Math.max(element.y - 8, chartArea.top + 16);
+
+                ctx.strokeText(label, element.x, y);
+                ctx.fillText(label, element.x, y);
+            });
+        });
+
+        ctx.restore();
+    }
+};
+
+function openTeamModal() {
+    document.getElementById('teamModal').classList.remove('hidden');
+}
+
+function closeTeamModal(event) {
+    if (event && event.target.id !== 'teamModal') return;
+    document.getElementById('teamModal').classList.add('hidden');
+}
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        document.getElementById('teamModal').classList.add('hidden');
+    }
+});
 // TAB SWITCHING LOGIC
 function switchTab(tabId) {
     // Hide all
@@ -360,12 +440,14 @@ function renderChart(probs) {
         },
         options: {
             responsive: true, maintainAspectRatio: false,
+            layout: { padding: { top: 20 } },
             plugins: { legend: { display: false } },
             scales: {
                 y: { max: 100, grid: { color: '#111', lineWidth: 2 }, border: { color: '#111', width: 4 } },
                 x: { grid: { display: false }, border: { color: '#111', width: 4 } }
             }
-        }
+        },
+        plugins: [probabilityPercentLabels]
     });
 }
 
@@ -442,6 +524,7 @@ function renderMetricsChart() {
             datasets: [{
                 label: 'F1-Score (%)',
                 data: [84.74, 82.99, 81.20, 78.47, 77.91],
+                valueSuffix: '%',
                 backgroundColor: ['#ffca3a', '#88ccf1', '#ff99c8', '#ff3c38', '#8ac926'],
                 borderColor: '#111',
                 borderWidth: 4,
@@ -450,6 +533,7 @@ function renderMetricsChart() {
         },
         options: {
             responsive: true, maintainAspectRatio: false,
+            layout: { padding: { top: 24 } },
             plugins: {
                 legend: { display: false },
                 title: { display: true, text: 'MODEL F1-SCORE', font: { weight: '900', size: 16 } }
@@ -458,7 +542,8 @@ function renderMetricsChart() {
                 y: { min: 70, max: 90, grid: { color: '#111', lineWidth: 2 }, border: { color: '#111', width: 4 }, ticks: { font: { weight: 'bold' } } },
                 x: { grid: { display: false }, border: { color: '#111', width: 4 }, ticks: { font: { weight: '900' } } }
             }
-        }
+        },
+        plugins: [metricValueLabels]
     });
 
     const ctxTime = document.getElementById('timeChart').getContext('2d');
@@ -470,6 +555,8 @@ function renderMetricsChart() {
                 {
                     label: 'Inference Time (ms)',
                     data: [9.89, 0.66, 0.61, 0.15, 0.03],
+                    valueSuffix: ' ms',
+                    showValueLabel: false,
                     backgroundColor: '#8ac926',
                     borderColor: '#111',
                     borderWidth: 4,
@@ -479,6 +566,7 @@ function renderMetricsChart() {
                     type: 'line',
                     label: 'Train Time (mins)',
                     data: [87.5, 28.6, 20.18, 4.93, 1.02],
+                    valueSuffix: ' min',
                     backgroundColor: '#ff3c38',
                     borderColor: '#ff3c38',
                     borderWidth: 4,
@@ -492,6 +580,7 @@ function renderMetricsChart() {
         },
         options: {
             responsive: true, maintainAspectRatio: false,
+            layout: { padding: { top: 28 } },
             plugins: {
                 title: { display: true, text: 'COMPUTATIONAL EFFICIENCY', font: { weight: '900', size: 16 } }
             },
@@ -510,6 +599,7 @@ function renderMetricsChart() {
                 },
                 x: { grid: { display: false }, border: { color: '#111', width: 4 }, ticks: { font: { weight: '900' } } }
             }
-        }
+        },
+        plugins: [metricValueLabels]
     });
 }

@@ -1,0 +1,62 @@
+Raw Text,Dataset's label,Codes level 1,Codes level 2,Evidences,Is Match,Note (Nếu có)
+morning. Has anyone woken up yet?,Normal,Normal,Normal_Casual,"- morning
+- woken up yet?",yes,Lời chào hỏi buổi sáng giao tiếp xã giao thông thường.
+"The dream is weird. but glad too see you mii. In my dream, I still think you're just smiling, haha, be patient, I have a friend, my cake",Normal,Normal,Normal_Life,"- glad too see you, 
+- you are just smiling
+- haha",yes,"Mặc dù người viết mô tả giấc mơ là weird, nhưng cảm xúc chủ đạo lại tích cực."
+I'm so happy my son is back,Normal,Normal,Normal_Happy,"- so happy
+- son is back",yes,Cảm xúc vui sướng và hạnh phúc thuần túy khi được đoàn tụ với người thân. 
+"A person's mouth is the storehouse of their treasury and their lips are the key, and their teeth are their claws. When someone opens the door of his convenience store, it will be clear to you the good and the bad",Normal,Normal,Normal_Info,"- mouth is the storehouse
+- lips are the key
+- teeth are their claws
+- clear to you the good and the bad",yes,"Đây là một dạng câu châm ngôn, ẩn dụ để bàn về lời ăn tiếng nói của con người. "
+I really can't control my emotions,Normal,Anxiety,Anxiety_Emotional,- can't control my emotions,no,Câu này có thể gán là Anxiety hoặc Depression chứ không phải normal.
+"Every time after sunset, why must this heart be restless as if it can't accept the situation. But with this situation, you can't do anything, if you do it, it can only make things worse
+",Anxiety,Anxiety,Anxiety_Helplessness,"- heart be restless
+- cant do anything
+- only make things worse",yes,Sự lo âu thể hiện qua cảm giác bồn chồn kèm với sự bất lực và nổi sợ hãi rằng mọi hành động đều chỉ dẫn đến kết quả tệ hơn.
+My life is chaos. There is no solution. Fear of the uncertain. Restless direction.,Anxiety,Anxiety,Anxiety_Uncertainty,"- life is chaos
+- fear off the uncertain
+- restless direction",yes,Chứng rối loạn lo âu: Sợ hãi những điều chưa biết/không chắc chắn
+"Already complete. Disappointed with a broken heart. Produces a sense of restlessness. I don't know, hopefully all of this ends beautifully",Anxiety,Anxiety,Anxiety_Emotional,"- Disappointed with a broken heart
+- sense of restlessness",yes,"Dù nguyên nhân là nỗi buồn và sự thất vọng trong tình cảm, nhưng trực tiếp là tạo ra sự bồn chồn, nên nhãn Anxiety vẫn hợp lý."
+Nightmares of a few minutes make you anxious and uninspired for days,Anxiety,Anxiety,Anxiety_Somatic,"- Nightmares
+- anxious
+- uninspired for days",yes,Có từ Anxiety xuất hiện
+"When the heart is sad, restless and filled with despair, remember that only to God do we complain.",Anxiety,Depression,Depression_Despair,"- sad
+- restless
+- filled with despair",no,Nhãn Anxiety đúng một phần nhờ từ restless. Nhưng mà câu này có thể là Despression vì sad và despair là dấu hiệu của trầm cảm
+"he tries to help me and asks me why i do not care. i said i do not know. i genuinely do not know why i do not care. he said i do not care about him and i realized, i do not as much as i should. i try but i cannot. I am so tired and he brings up my issues whenever we talk and say that i cannot admit when I am wrong, things like that. i have lost all interest in caring for people. I am so tired. how do i fix this? i do not want to lose my friends but I am so drained i do not care about my friends",Depression,Depression,Depression_Apathy,"- do not know why i do not care
+- lost all interest
+- so drained
+- lost all intterest in caring for people",yes,"Sự vô cảm và cạn kiệt năng lượng tinh thần, khiến người viết không thể duy trì các mối quan hệ xã hội. Triệu chứng của trầm cảm"
+I have had suicidal thought idk if that is a sign of sadness or depression ? Can someone help Am I depressed or just sad?,Depression,Suicidal,Suicidal_Ideation,"- suicidal thought
+- Am I depressed or just sad",no,Suy nghĩ tự sát là yếu tố rõ rệt nhất để phân biệt giữa nỗi buồn thông thường và trầm cảm. Nhưng mà cái này gán suicidal hay depression?
+"There is someone very close to me with depression and i have no idea how to respond when they vent to me, I have never been good with handling other peoples feelings and I do not want them to think I am dismissing their feelings, I really do care about them and I feel bad when they trust me enough to vent and I am just speechless. Any help is appreciated! How do I comfort someone when they vent to me?",Depression,Normal,Normal_SupportSeeking,"- someone very close to me with depression
+- I am just speechless
+- how do I comfort someone",no,"Bản thân người viết bình thường, nhưng chủ đề, người được đề cập thì bị trầm cảm, cái này tính sao nhỉ?"
+"I have been laying in bed all day. i do not have the energy to eat and i have not done anything but stare at my phone for the last 12 hours. i do not really care about myself a whole lot and i cannot muster up the energy to climb out of this depressive spiral right now. i do not feel like i have anyone in real life to talk to about this. any advice would be appreciated. [m19] feeling emotionally numb, do not know what to do.",Depression,Depression,Depression_Somatic,"- laying in bed all day
+- not have the energy to eat
+- cannot muster up the energy to climb out of this depressive spiral
+- feeling emotionally numb",yes,"Mẫu này miêu tả môt phase trầm cảm, về thể chất lẫn tinh thần "
+I am just trying to vibe but i get random urges to cut myself what is that about what is makes me want to cut myself?,Depression,Depression,Depression_Self_Harm,- random urges to cut myself,yes,Self-harm thường đi liền với trầm cảm và rối loạn cảm xúc
+"that is it. No more. I have had enough. I need release. I am a financial wreck and the collection people will not stop. I am a broke realtor with no clients. Never had any deal in the miserable 5 months I have been licensed. I want to end it. My little brother, my hope and dream just died in my arms yesterday. We could not even give him a proper burial because of how disgustingly poor I am. I live in NY. I am going to scale the Williamsburg Bridge in an hour to prepare my decent into the river via a nice painful jump off the beam. Goodbye fucked up piece of shit world. It was not nice knowing you Its over for me. (21 m)",Suicidal,Suicidal,Suicidal_Immediate_Intent,"- I have had enough
+- I need release
+- My little brother, my hope and dream just died in my arms yesterday
+- nice painful jump off the beam
+- Its over for me",yes,"Người viết có kế hoạch, địa điểm, thời gian và phương thức cực kỳ rõ ràng. Mức độ rủi ro tự sát rất cao :(."
+"I am in a lot of pain right now. Almost killed myself but I decided not to and called a friend.I say so many stupid things. So many horrible things happen to me...I cannot. Like I just cannot describe it right now.God seems cruel to me. He allows me to constantly suffer because of some big plan that is supposed to glorify him--so he is just allowing me to suffer for an ego boost? Is that what it is?Why does my car have to break down out of nowhere? Why do I have to feel constantly lonely all the time, like there is this barrier between me and everyone else? Why do I have to work at a miserable job just so I can eat and live? Why does the Bible say even *thinking* about sex is a sin but then God gives me all this sexual desire and make it impossible for me to find love? Why do I have to wake up every day, wanting to kill myself, only to force myself to move on and bear this horrible, horrible pain? cannot things just get better? For once?I am sorry if I sound incoherent. I just cannot think straight right now. Why should I keep living?",Suicidal,Suicidal,Suicidal_Ambivalence,"- Almost killed myself,
+- wanting to kill myself
+- only to force myself
+- Why should I keep living?
+",yes,Người viết giằng xé nội tâm ý nghĩ muốn chết vẫn ám ảnh liên tục.
+So comforting and peaceful... I love that if my life ever becomes even more unbearable than it is now that i can just end ut with a fail-proof method,Suicidal,Suicidal,Suicidal_Backup_Plan,"- comforting and peaceful
+- my life even more unbearable than it is now
+- end ut with a fail-proof method
+",yes,"Xem cái chết như một kế hoạch dự phòng để mang lại sự bình yên. Chưa hành động ngay, nhưng đã chuẩn bị sẵn..."
+school is the worst i get so nervous and worked up about it that i throw up or pass out i will force myself to pass out by hyperventilating just to get a break from it all i dont know what to do and i am starting to get suicidal thoughts my mom only shames me for procrastinating too much or poor me shit please help,Suicidal,Suicidal,Suicidal_Ideation,"- force myself to pass out
+- starting to get suicidal thoughts
+- mom only shames me",yes,Mẫu này thể hiện sự chuyển biến tâm lý rõ rệt: Khởi phát là Lo âu học đường -> Chuyển thành hoảng loạn thể chất và tự hại -> Dẫn đến ý nghĩ tự sát. Sự thiếu hỗ trợ từ gia đình
+"I have always had intrusive thoughts about killing myself. It seems inevitable. Everything in my life appears to be going perfect, I had been able to manage the intrusive thoughts so that less than 5% were thoughts of self harm. But today more than 90% of my thoughts have been self destructive. Many times today I thought about swerving into a semi in the oncoming lane. Hopefully I can keep it together long enough to leave the country and find some hope. Thank you all for existing. having a difficult time",Suicidal,Suicidal,Suicidal_Intrusive_Thoughts,"- intrusive thoughts about killing myself
+- 90% of my thoughts have been self destructive
+- swerving into a semi",yes,"Ý nghĩ tự sát ở đây không đến từ một biến cố cụ thể, mà xuất hiện dưới dạng suy nghĩ đến mức ám ảnh vượt ngoài tầm kiểm soát của lý trí (dù cuộc sống người đó đang bình thường)."
