@@ -15,10 +15,10 @@ from torch.utils.data import Dataset
 
 PAD = "<pad>"
 UNK = "<unk>"
-_URL_TOK = "URLPLACEHOLDER"
-_USER_TOK = "USERPLACEHOLDER"
-_NAME_TOK = "NAMEPLACEHOLDER"
-_NUMBER_TOK = "NUMBERPLACEHOLDER"
+# _URL_TOK = "URLPLACEHOLDER"
+# _USER_TOK = "USERPLACEHOLDER"
+# _NAME_TOK = "NAMEPLACEHOLDER"
+# _NUMBER_TOK = "NUMBERPLACEHOLDER"
 
 _DEMOJIZE_COLON_BLOCK = re.compile(r":([-+a-zA-Z0-9][-a-zA-Z0-9_]*):")
 
@@ -44,10 +44,10 @@ def normalize_placeholder_tokens(text: str) -> str:
     if not isinstance(text, str):
         return ""
     t = text
-    t = re.sub(r"<username>", f" {_USER_TOK} ", t, flags=re.I)
-    t = re.sub(r"<url>", f" {_URL_TOK} ", t, flags=re.I)
-    t = re.sub(r"<name>", f" {_NAME_TOK} ", t, flags=re.I)
-    t = re.sub(r"<number>", f" {_NUMBER_TOK} ", t, flags=re.I)
+    # t = re.sub(r"<username>", f" {_USER_TOK} ", t, flags=re.I)
+    # t = re.sub(r"<url>", f" {_URL_TOK} ", t, flags=re.I)
+    # t = re.sub(r"<name>", f" {_NAME_TOK} ", t, flags=re.I)
+    # t = re.sub(r"<number>", f" {_NUMBER_TOK} ", t, flags=re.I)
     t = re.sub(r"\s+", " ", t).strip()
     return t
 
