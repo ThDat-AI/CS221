@@ -43,7 +43,7 @@ def expand_demojized_tokens(text: str) -> str:
 def normalize_placeholder_tokens(text: str) -> str:
     if not isinstance(text, str):
         return ""
-    t = text
+    t = text.lower()
     # t = re.sub(r"<username>", f" {_USER_TOK} ", t, flags=re.I)
     # t = re.sub(r"<url>", f" {_URL_TOK} ", t, flags=re.I)
     # t = re.sub(r"<name>", f" {_NAME_TOK} ", t, flags=re.I)
