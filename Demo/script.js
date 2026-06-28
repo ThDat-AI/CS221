@@ -144,6 +144,26 @@ function isProbablyEnglish(text) {
 
 // Fallback function to guarantee the demo works even if APIs are blocked
 async function fetchRedditData(subreddit, limit) {
+    // 1. Try fetching via our own FastAPI backend proxy (bypasses CORS and client rate limits)
+    if (apiUrl && apiUrl.includes("/api/predict")) {
+        const backendRedditUrl = apiUrl.replace("/api/predict", "/api/reddit") + `?subreddit=${subreddit}&limit=${limit * 4}`;
+        try {
+            console.log("Attempting to fetch Reddit data via backend proxy:", backendRedditUrl);
+            const res = await fetch(backendRedditUrl, {
+                headers: { 'ngrok-skip-browser-warning': 'true' }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.data && data.data.children && data.data.children.length > 0) {
+                    console.log("Successfully fetched Reddit data via backend proxy.");
+                    return data;
+                }
+            }
+        } catch (e) {
+            console.warn("Backend Reddit proxy failed or not implemented, falling back to public proxies:", e);
+        }
+    }
+
     const url = `https://www.reddit.com/r/${subreddit}/new.json?limit=${limit * 4}`; // Fetch extra to account for filtering
     const proxies = [
         `https://corsproxy.io/?${encodeURIComponent(url)}`,
@@ -160,7 +180,7 @@ async function fetchRedditData(subreddit, limit) {
         }
     }
     
-    // 🚨 FALLBACK: If all public proxies fail (very common due to rate limits), use this realistic mock data so the demo presentation NEVER crashes!
+    // 🚨 FALLBACK: If all public proxies fail, use this realistic mock data containing 40 balanced items so the demo NEVER crashes and supports 10/20/30/40 selection!
     console.warn("All proxies failed or blocked by CORS. Using fallback mock data to ensure demo stability.");
     return {
         data: {
@@ -171,7 +191,40 @@ async function fetchRedditData(subreddit, limit) {
                 { data: { id: "m4", title: "Just want it all to end.", selftext: "I've written my letters. Tonight is the night. I can't take the pain anymore. I'm sorry to everyone I disappointed.", author: "throwaway_999", score: 5, permalink: "/r/SuicideWatch/m4" } },
                 { data: { id: "m5", title: "I got the job!!!", selftext: "After 6 months of searching and getting rejected, I finally landed a senior position! I'm so excited and wanted to thank this community for the support.", author: "career_win", score: 120, permalink: "/r/casualconversation/m5" } },
                 { data: { id: "m6", title: "Can't stop crying over the smallest things", selftext: "I dropped my spoon today and just burst into tears. I'm so tired of feeling like this.", author: "tired_always", score: 40, permalink: "/r/depression/m6" } },
-                { data: { id: "m7", title: "What's everyone's favorite weekend activity?", selftext: "I love baking! What do you guys like to do to unwind?", author: "baker_bob", score: 12, permalink: "/r/casualconversation/m7" } }
+                { data: { id: "m7", title: "What's everyone's favorite weekend activity?", selftext: "I love baking! What do you guys like to do to unwind?", author: "baker_bob", score: 12, permalink: "/r/casualconversation/m7" } },
+                { data: { id: "m8", title: "Socializing is so terrifying sometimes", selftext: "My stomach gets in knots whenever I have to call someone on the phone. Does anyone else get this or am I just weird?", author: "anxious_mess", score: 19, permalink: "/r/Anxiety/m8" } },
+                { data: { id: "m9", title: "I have no motivation to do anything", selftext: "I've been in bed for three days straight. I look at my messy room and just don't have the energy to clean it or even get up.", author: "empty_inside", score: 31, permalink: "/r/depression/m9" } },
+                { data: { id: "m10", title: "I can't see any way out of this", selftext: "Everything is dark and I feel like a burden to my family. I think they'd be better off without me. I'm planning to end it all this weekend.", author: "lost_user", score: 8, permalink: "/r/SuicideWatch/m10" } },
+                { data: { id: "m11", title: "Started learning a new language!", selftext: "I've been using Duolingo for Spanish for a month now and I'm starting to understand basic conversations. It's super fun!", author: "learner_dan", score: 55, permalink: "/r/casualconversation/m11" } },
+                { data: { id: "m12", title: "Constant state of panic before exams", selftext: "My finals are next week and I'm having trouble breathing just thinking about them. What if I fail and ruin my entire career?", author: "studious_anxious", score: 12, permalink: "/r/Anxiety/m12" } },
+                { data: { id: "m13", title: "I feel so disconnected from everyone", selftext: "Even when I'm surrounded by friends, I feel completely alone. It's like there's a glass wall between me and the rest of the world.", author: "numb_mind", score: 28, permalink: "/r/depression/m13" } },
+                { data: { id: "m14", title: "Goodbye world, thank you for trying", selftext: "I've decided. I'm going to jump tonight. I can't endure this suffering anymore. I'm sorry I wasn't strong enough.", author: "broken_soul", score: 3, permalink: "/r/SuicideWatch/m14" } },
+                { data: { id: "m15", title: "Recommendation for a good book?", selftext: "Just finished reading Dune and absolutely loved it. Looking for some similar sci-fi recommendations with deep world-building.", author: "bookworm99", score: 34, permalink: "/r/casualconversation/m15" } },
+                { data: { id: "m16", title: "Dread every time my boss emails me", selftext: "Even when it says 'just checking in', I immediately assume I'm getting fired. My chest gets tight and I start sweating.", author: "job_anxiety", score: 25, permalink: "/r/Anxiety/m16" } },
+                { data: { id: "m17", title: "Does it ever get better?", selftext: "I've been feeling this numbness for years. Therapy isn't working, meds aren't working. I'm just tired of pretending to be okay.", author: "weary_traveler", score: 50, permalink: "/r/depression/m17" } },
+                { data: { id: "m18", title: "I'm going to take all my pills tonight", selftext: "I have a stash of medication ready. I can't live like this anymore. Please don't look for me. This is the only way.", author: "silent_goodbye", score: 2, permalink: "/r/SuicideWatch/m18" } },
+                { data: { id: "m19", title: "What did you cook for dinner?", selftext: "I made a homemade lasagna from scratch today! It took 3 hours but tasted incredible. Cooking is such a therapeutic hobby.", author: "chef_anna", score: 62, permalink: "/r/casualconversation/m19" } },
+                { data: { id: "m20", title: "Afraid of driving on the highway", selftext: "Every time I have to merge, I feel like I'm going to crash. I avoid highways completely and it takes me twice as long to get anywhere.", author: "road_panic", score: 17, permalink: "/r/Anxiety/m20" } },
+                { data: { id: "m21", title: "I don't know who I am anymore", selftext: "I look in the mirror and see a stranger. I've lost all my hobbies, my passions, and my personality. I feel like a shell.", author: "lost_identity", score: 41, permalink: "/r/depression/m21" } },
+                { data: { id: "m22", title: "This is my final post", selftext: "I've bought the rope. There is no hope left for me. I've lived a painful life and I'm ready to finally rest. Goodbye.", author: "final_chapter", score: 1, permalink: "/r/SuicideWatch/m22" } },
+                { data: { id: "m23", title: "Adopted a kitten today!", selftext: "She is a 3-month-old calico and hasn't stopped purring since I brought her home. Need some name suggestions!", author: "cat_parent", score: 110, permalink: "/r/casualconversation/m23" } },
+                { data: { id: "m24", title: "Waking up with sudden panic attacks", selftext: "I wake up in the middle of the night with my heart pounding out of my chest and gasping for air. It's so scary.", author: "night_panic", score: 20, permalink: "/r/Anxiety/m24" } },
+                { data: { id: "m25", title: "I feel guilty for being depressed", selftext: "I have a good job, a loving family, and a nice apartment. Yet I still feel miserable. I feel like an ungrateful jerk.", author: "guilt_ridden", score: 38, permalink: "/r/depression/m25" } },
+                { data: { id: "m26", title: "Planning to end my life tonight", selftext: "I've made peace with my decision. I can't keep struggling. The bridge near my house is where I'll go. Thank you all.", author: "done_with_pain", score: 4, permalink: "/r/SuicideWatch/m26" } },
+                { data: { id: "m27", title: "Perfect weather for a run!", selftext: "Did a quick 5k this morning. The air was crisp and the park was so peaceful. Setting a goal for a half marathon soon.", author: "runner_lifestyle", score: 48, permalink: "/r/casualconversation/m27" } },
+                { data: { id: "m28", title: "Scared of health issues constantly", selftext: "Every minor headache makes me think I have a brain tumor. I spend hours on Google searching symptoms and making myself panic.", author: "hypochondriac", score: 15, permalink: "/r/Anxiety/m28" } },
+                { data: { id: "m29", title: "Sleeping 12 hours and still exhausted", selftext: "I can sleep all day and still feel like I haven't rested. My body feels like lead and moving takes so much effort.", author: "sleepy_depressed", score: 29, permalink: "/r/depression/m29" } },
+                { data: { id: "m30", title: "I want to sleep and never wake up", selftext: "I've had enough of this life. I have everything ready for tonight. I'm ready to go. I hope it's peaceful.", author: "no_more_tomorrow", score: 3, permalink: "/r/SuicideWatch/m30" } },
+                { data: { id: "m31", title: "What's your favorite board game?", selftext: "Hosting a board game night with friends. We usually play Catan or Ticket to Ride. Looking for new suggestions!", author: "game_night_host", score: 43, permalink: "/r/casualconversation/m31" } },
+                { data: { id: "m32", title: "Paralyzed by making simple decisions", selftext: "I spent 30 minutes in the grocery aisle trying to pick a brand of cereal. I got so overwhelmed I just left without buying anything.", author: "decision_panic", score: 14, permalink: "/r/Anxiety/m32" } },
+                { data: { id: "m33", title: "I've isolated myself from everyone", selftext: "I haven't replied to any messages from my friends in weeks. Now I feel too embarrassed to reach out. I'm so lonely.", author: "isolated_mind", score: 36, permalink: "/r/depression/m33" } },
+                { data: { id: "m34", title: "I can't survive another day", selftext: "I'm planning to jump in front of a train today. The pain in my head is unbearable. I just want the suffering to stop.", author: "hopeless_track", score: 2, permalink: "/r/SuicideWatch/m34" } },
+                { data: { id: "m35", title: "Finally finished my art piece!", selftext: "Spent the last two weeks oil painting a landscape of the mountains. I'm really proud of how the lighting turned out.", author: "painter_gal", score: 75, permalink: "/r/casualconversation/m35" } },
+                { data: { id: "m36", title: "Afraid of speaking in public", selftext: "I have a presentation tomorrow and I'm shaking, sweating, and feeling nauseated just thinking about standing in front of the class.", author: "stage_fright", score: 18, permalink: "/r/Anxiety/m36" } },
+                { data: { id: "m37", title: "Nothing brings me joy anymore", selftext: "Playing games, watching movies, hanging out... everything feels grey and boring. I just feel empty inside.", author: "grey_world", score: 33, permalink: "/r/depression/m37" } },
+                { data: { id: "m38", title: "I'm ready to write my suicide note", selftext: "It's the only logical choice left. I'm finishing up my final arrangements. Tonight will be my last night. Goodbye.", author: "final_goodbye", score: 1, permalink: "/r/SuicideWatch/m38" } },
+                { data: { id: "m39", title: "Going to a concert next week!", selftext: "Super excited to see my favorite band live. It's my first concert in years. Got my tickets and outfit ready!", author: "music_lover", score: 58, permalink: "/r/casualconversation/m39" } },
+                { data: { id: "m40", title: "Hyperventilating before job interviews", selftext: "I have an interview in an hour and I can't stop shaking. My mind goes completely blank and I forget my own resume.", author: "interview_panic", score: 22, permalink: "/r/Anxiety/m40" } }
             ]
         }
     };
