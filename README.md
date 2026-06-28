@@ -101,3 +101,5 @@ Lưu ý: Thời gian dự đoán được đo lường trên môi trường Kagg
 - **Tự Động Điều Phối API**: Backend FastAPI tự động gửi văn bản cùng lúc đến cả 5 mô hình đang được nạp sẵn, cho phép so sánh kết quả chạy song song một cách nhanh chóng.
 - **Giải Thích AI (XAI)**: Giao diện cung cấp biểu đồ phân phối xác suất, giúp hiểu rõ hơn về mức độ tự tin của từng mô hình.
 - **Hệ Thống Cảnh Báo Sớm**: Tự động kích hoạt cảnh báo trên giao diện khi văn bản được phân loại là "Suicidal" với độ tự tin cao.
+
+Build Latex: xelatex main.tex; xelatex main.tex

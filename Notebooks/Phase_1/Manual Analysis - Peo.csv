@@ -1,0 +1,77 @@
+Raw Text,Dataset's label,Codes level 1,Codes level 2,Evidences,Is Match,Note (Nếu có)
+"Dream of watching Wonpil's musical but live, piri is really there.",Normal,Normal,Normal_Casual,"- dream of watching Wonpil's musical live
+- piri is really there",Yes,"Nội dung mang tính sở thích cá nhân và mong muốn trải nghiệm, không có dấu hiệu cảm xúc tiêu cực"
+imagine at this hour already have to discuss with people,Normal,Normal,Normal_Life,"- at this hour
+- have to discuss with people",Yes,"Thể hiện sự khó chịu trong sinh hoạt thường ngày, không có dấu hiệu cảm xúc tiêu cực nghiêm trọng"
+Does anyone have a photo of Taeyong and NCT Dream that is in the same frame?,Normal,Normal,Normal_Casual,"- does anyone have a photo
+- Taeyong and NCT Dream
+- in the same frame",Yes,"Câu hỏi tìm kiếm thông tin/hình ảnh, không liên quan đến cảm xúc tiêu cực"
+Don't be shy about losingstreaks when playing solo. Because your mentality is stronger than a party player.,Normal,Normal,Normal_Casual,"- don't be shy about losing streaks
+- mentality is stronger than a party player",Yes,"Nội dung mang tính động viên, khuyến khích tư duy tích cực khi chơi game"
+"Have you ever panicked, your friend of the opposite sex has changed his attitude towards you, so he looks at you as a girl, not as a friend of the opposite sex.",Normal,Anxiety,Anxiety_Uncertainty,"- have you ever panicked
+- friend of the opposite sex has changed his attitude
+- looks at you as a girl, not as a friend",No,"Có yếu tố lo lắng (“panicked”) tương đối, có thể xem là anxiety"
+"Sometimes I can't even rest. Always worried, worried about this, even though I'm tired",Anxiety,Anxiety,Anxiety_Restlessness,"- can't even rest
+- always worried
+- worried... even though I'm tired",Yes,"Biểu hiện lo âu kéo dài, ảnh hưởng đến nghỉ ngơi"
+"For a long time, my heart feels like it's going to burst when it's restless",Anxiety,Anxiety,Anxiety_Restlessness,"- for a long time
+- heart feels like it's going to burst
+- when it's restless",Yes,"Biểu hiện lo âu kéo dài kèm triệu chứng thể chất (tim đập mạnh, căng tức ngực)"
+"Sleeps 3 hours, rest restless. Try a variety of positions and ways never fall asleep. I really need to be able to control this mind.",Anxiety,Anxiety,Anxiety_Somatic,"- sleeps 3 hours
+- restless
+- never fall asleep
+- need to control this mind",Yes,Biểu hiện lo âu rõ rệt với mất ngủ kéo dài và cảm giác mất kiểm soát suy nghĩ
+"It's really restless since yesterday thinking about another second in class 12, preparations for SM are still a little bit, there's a lot to worry about",Anxiety,Anxiety,Anxiety_Uncertainty,"- really restless since yesterday
+- thinking about class 12
+- preparations still a little bit
+- a lot to worry about",Yes,Lo âu xuất phát từ áp lực học tập và chuẩn bị
+"I'm really restless when I just wake up, I feel like I immediately get bad thoughts and it's really every day",Anxiety,Depression,Depression_Despair,"- really restless when I just wake up
+- immediately get bad thoughts
+- every day",No,Có yếu tố suy nghĩ tiêu cực lặp lại (gần với depression là anxiety)
+that is it. I just needed to get that frustration off my chest. I am just so tired and everything is too painful. there is nothing in this world I want more than not being in constant pain. I wish I did not have depression,Depression,Depression,Depression_Despair,"- so tired
+- everything is too painful
+- constant pain
+- wish I did not have depression",Yes,"Biểu hiện trầm cảm rõ rệt với cảm giác kiệt sức, đau khổ kéo dài và mong muốn thoát khỏi tình trạng hiện tại"
+"I wish people were not allowed to lie. Also, what is love? Because I hear it often but I sure do not feel it. The people I thought were there for me, were not when I needed them the most. Typical.",Depression,Depression,Depression_Apathy,"- people were not allowed to lie
+- what is love / do not feel it
+- people were not there when I needed them",Yes,Thể hiện mất niềm tin và cảm giác bị bỏ rơi; có yếu tố trầm cảm (emotional numbness) nhưng chưa đủ rõ ràng hoàn toàn
+"I just suck. I am no good at anything and even managed to ruin my gf's life now too. Gave her a delta 8 gummy like 43 days before she had a drug panel. And it is been sent to a lab for ""further testing"" I feel like such a fucking cancer. If it were not for me everything could be fine. But I did not just manage to fuck up my own life I fucked up hers too. Wtf is wrong with me. I am so much luckier than most people to even have 1 or 2 nice things in life and I just have to fuck them up. The world would be better off without me in it. I ruin everything I touch",Depression,Depression,Depression_Despair,"- I just suck / no good at anything
+- ruin my gf's life
+- feel like such a cancer
+- everything could be fine without me
+- world would be better off without me
+- I ruin everything I touch",Yes,"Tự đánh giá bản thân cực kỳ tiêu cực kèm guilt quá mức và ý niệm “better off without me” (thụ động, cận suicidal)"
+"So honestly I am just wondering if this is normal, getting better, or I should be concerned. I had a whole plan to unalive (I have tried like 3 times over the last 10 yrs.) but it had to be in the am before anyone was awake and my alarm went off and I was legit too tired to even go through with it. Like I hate life, I am tired of this but I could not make myself get up. Is this normal depression behavior?",Depression,Suicidal,Suicidal_Ambivalence,"- had a whole plan to unalive
+- tried like 3 times over the last 10 yrs
+- too tired to go through with it
+- hate life
+- tired of this",No,Có tiền sử hành vi tự sát và ý định rõ ràng nhưng kèm tính lưỡng lự (ambivalence); nguy cơ cao dù hiện tại không thực hiện hành động
+"i just hate my life so much...i want it to end, all the suffering and all the fking pain that everyone gives me, I am sick of getting betrayed and made fun of, i just hate everything about me, thank you for those who turned me like i am now, i fking hate everything and most of all i hate myself, nothing on me is good or even fucking normal...I am just shit at everything, i should just cut my wrist and end it...there is not anything to keep me here... Should i start cutting again...",Depression,Suicidal,Suicidal_Ideation,"- i want it to end
+- all the suffering and pain
+- hate everything about me
+- nothing on me is good or normal
+- should just cut my wrist and end it
+- should i start cutting again",No,"Nội dung thể hiện ý nghĩ tự sát và tự gây hại rõ ràng (active ideation), vượt mức trầm cảm thông thường, mức độ nghiêm trọng cao"
+"You cannot stop me. I am a piece of shit and everyone hates me, including myself, and for a good reason. I am killing myself tonight.",Suicidal,Suicidal,Suicidal_Immediate_Intent,"- you cannot stop me
+- everyone hates me including myself
+- I am killing myself tonight",Yes,"Ý định tự sát rõ ràng, mang tính cấp bách (imminent), kèm tự hạ thấp bản thân nghiêm trọng → nguy cơ rất cao"
+I am just done with this world I really do not want to live anymore no one cares no one what is the point no one is going to read this I am done with my life its over Completely done with life,Suicidal,Suicidal,Suicidal_Ideation,"- done with this world
+- do not want to live anymore
+- no one cares / what is the point
+- done with my life / it’s over",Yes,Ý nghĩ muốn chết rõ ràng (passive death wish) kèm cảm giác vô nghĩa và bị bỏ rơi → nguy cơ cao
+I do not know if its tomorrow or in a year but I know that Ill kill myself eventually. I need to accept that I am going to die via suicide one way or another.,Suicidal,Suicidal,Suicidal_Immediate_Intent,"- Ill kill myself eventually
+- going to die via suicide one way or another
+- do not know if tomorrow or in a year",Yes,Ý định tự sát mang tính chắc chắn trong tương lai (chronic ideation) kèm niềm tin định mệnh (fatalistic cognition) → nguy cơ rất cao
+I cannot tag it NSFW for some stupid reason. This is all have. I hope this is okay. I want to cut myself so bad. I want to stab my eye. I want cut my arms up. I want to cut off my penis. I want to feel pain. I feel like I am falling back into how I felt a few months ago. I want other things more than I want to die but death is so much easier. I would not fail to kill myself if I tried. I can easily kill myself. Its tempting. Nobody can stop me. I want to fucking burn. NSFW I feel bad,Suicidal,Suicidal,Suicidal_Immediate_Intent,"- want to cut myself so bad
+- want to stab my eye / cut my arms / cut off my penis
+- want to feel pain
+- death is easier
+- would not fail to kill myself
+- can easily kill myself
+- nobody can stop me",Yes,"Ý nghĩ tự hại và tự sát rất mạnh, đa dạng phương thức + niềm tin có khả năng thực hiện (high capability) → mức nguy cơ cực cao"
+I have had a pretty cushy life. And yet despite that I have squandered nearly every opportunity I have been given and fantasized or felt anxious about things that do not matter at all. Almost every major choice I make has led me further down a path that is increasingly hard to come back from. I just want out. I know I am a disappointment. I hate myself and nearly every decision I make.,Suicidal,Suicidal,Suicidal_Intrusive_Thoughts,"- squandered nearly every opportunity
+- path hard to come back from
+- I just want out
+- I am a disappointment
+- I hate myself
+- nearly every decision I make",Yes,"Tự đánh giá bản thân cực kỳ tiêu cực + mong muốn thoát khỏi cuộc sống (“want out”) → cận suicidal, nguy cơ cao dù chưa nêu phương thức cụ thể"

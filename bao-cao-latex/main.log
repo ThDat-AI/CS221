@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.5) (preloaded format=xelatex 2026.5.18)  29 MAY 2026 14:48
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.5) (preloaded format=xelatex 2026.5.18)  28 JUN 2026 11:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -896,26 +896,26 @@ Package babel Info: 'vietnamese' activates 'vietnamese' shorthands.
 )
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
 
 Package fontspec Info: 
 (fontspec)             Adjusting the maths setup (use [no-math] to avoid
@@ -923,64 +923,64 @@ Package fontspec Info:
 
 \symlegacymaths=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
-(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 110.
-LaTeX Font Info:    Redeclaring math accent \acute on input line 110.
-LaTeX Font Info:    Redeclaring math accent \grave on input line 110.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 110.
-LaTeX Font Info:    Redeclaring math accent \tilde on input line 110.
-LaTeX Font Info:    Redeclaring math accent \bar on input line 110.
-LaTeX Font Info:    Redeclaring math accent \breve on input line 110.
-LaTeX Font Info:    Redeclaring math accent \check on input line 110.
-LaTeX Font Info:    Redeclaring math accent \hat on input line 110.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 110.
-LaTeX Font Info:    Redeclaring math accent \mathring on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Delta on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Theta on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Xi on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Pi on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Phi on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Psi on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \Omega on input line 110.
-LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 110.
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 110.
+(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 114.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 114.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 114.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 114.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 114.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 114.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 114.
+LaTeX Font Info:    Redeclaring math accent \check on input line 114.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 114.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 114.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 114.
+LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 114.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 114.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 110.
+(Font)              `operators' in the math version `normal' on input line 114.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> TU/TimesNewRoman(0)/m/n on input line 1
-10.
+14.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 110.
+(Font)              `operators' in the math version `bold' on input line 114.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/m/n on input line 
-110.
+114.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/m/n on 
-input line 110.
+input line 114.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
 (Font)                  OT1/cmr/m/it --> TU/TimesNewRoman(0)/m/it on input line
- 110.
+ 114.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/b/n on input line 
-110.
+114.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 110.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 114.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 110.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 114.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/b/n on 
-input line 110.
+input line 114.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> TU/TimesNewRoman(0)/b/it on input lin
-e 110.
+e 114.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 110.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 114.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 110.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 114.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1020,20 +1020,20 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 110.
+Package hyperref Info: Link coloring OFF on input line 114.
 (main.out) (main.out)
 \@outlinefile=\write4
 \openout4 = `main.out'.
 
 File: uit.png Graphic file (type bmp)
 <uit.png>
-LaTeX Font Info:    Trying to load font information for U+msa on input line 141
+LaTeX Font Info:    Trying to load font information for U+msa on input line 142
 .
 
 (C:\Users\khang\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 141
+LaTeX Font Info:    Trying to load font information for U+msb on input line 142
 .
 
 (C:\Users\khang\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
@@ -1056,80 +1056,145 @@ Chương 1.
 
 ] [3]
 Chương 2.
+File: pictures/class_distribution.png Graphic file (type bmp)
+<pictures/class_distribution.png>
 [4
 
-] [5]
-Underfull \hbox (badness 4899) in paragraph at lines 364--364
+]
+File: pictures/word_count_boxplot.png Graphic file (type bmp)
+<pictures/word_count_boxplot.png>
+ [5]
+File: pictures/top_words.png Graphic file (type bmp)
+<pictures/top_words.png>
+ [6]
+File: pictures/top_bigrams.png Graphic file (type bmp)
+<pictures/top_bigrams.png>
+ [7]
+File: pictures/tfidf_distinctive_words.png Graphic file (type bmp)
+<pictures/tfidf_distinctive_words.png>
+ [8]
+File: pictures/vocabulary_similarity.png Graphic file (type bmp)
+<pictures/vocabulary_similarity.png>
+File: pictures/ttr_diversity.png Graphic file (type bmp)
+<pictures/ttr_diversity.png>
+ [9]
+File: pictures/data_quality_overview.png Graphic file (type bmp)
+<pictures/data_quality_overview.png>
+ [10]
+File: pictures/data_quality_by_class.png Graphic file (type bmp)
+<pictures/data_quality_by_class.png>
+File: pictures/feature_label_insight.png Graphic file (type bmp)
+<pictures/feature_label_insight.png>
+ [11] [12]
+Underfull \hbox (badness 4899) in paragraph at lines 431--431
 []|\TU/TimesNewRoman(0)/m/n/10.95 “so happy”, “son is
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 364--364
+Underfull \hbox (badness 10000) in paragraph at lines 431--431
 []|\TU/TimesNewRoman(0)/m/n/10.95 Anxiety: Uncer-
  []
 
-[6]
+[13]
 Chương 3.
-[7
-
-] [8] [9]
-Chương 4.
-[10
-
-] [11] [12] [13]
-Chương 5.
+File: pictures/overall_pipeline.png Graphic file (type bmp)
+<pictures/overall_pipeline.png>
 [14
 
-] [15] [16]
-Underfull \hbox (badness 10000) in paragraph at lines 715--715
+]
+File: pictures/pipeline.png Graphic file (type bmp)
+<pictures/pipeline.png>
+ [15] [16]
+File: pictures/feature_correlation_heatmap.png Graphic file (type bmp)
+<pictures/feature_correlation_heatmap.png>
+ [17]
+File: pictures/bert_input.png Graphic file (type bmp)
+<pictures/bert_input.png>
+ [18]
+Chương 4.
+[19
+
+]
+File: pictures/dl_architectures.png Graphic file (type bmp)
+<pictures/dl_architectures.png>
+ [20] [21]
+File: pictures/neuro_main.png Graphic file (type bmp)
+<pictures/neuro_main.png>
+File: pictures/neuro_2.png Graphic file (type bmp)
+<pictures/neuro_2.png>
+ [22]
+Chương 5.
+[23
+
+] [24]
+File: pictures/textcnn_learning_curves.png Graphic file (type bmp)
+<pictures/textcnn_learning_curves.png>
+File: pictures/bilstm_learning_curves.png Graphic file (type bmp)
+<pictures/bilstm_learning_curves.png>
+
+Overfull \hbox (6.35553pt too wide) in paragraph at lines 764--769
+ [][] 
+ []
+
+[25]
+File: pictures/lightgbm_confusion_matrix.png Graphic file (type bmp)
+<pictures/lightgbm_confusion_matrix.png>
+File: pictures/textcnn_confusion_matrix.png Graphic file (type bmp)
+<pictures/textcnn_confusion_matrix.png>
+File: pictures/bilstm_confusion_matrix.png Graphic file (type bmp)
+<pictures/bilstm_confusion_matrix.png>
+File: pictures/bert_confusion_matrix.png Graphic file (type bmp)
+<pictures/bert_confusion_matrix.png>
+ [26]
+Underfull \hbox (badness 10000) in paragraph at lines 833--833
 []|\TU/TimesNewRoman(0)/m/n/10.95 Nhãn gốc $\OMS/cmsy/m/n/10.95 !$
  []
 
 
-Underfull \hbox (badness 4899) in paragraph at lines 715--715
+Underfull \hbox (badness 4899) in paragraph at lines 833--833
 []|\TU/TimesNewRoman(0)/m/n/10.95 “so happy”, “son is
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 715--715
+Underfull \hbox (badness 10000) in paragraph at lines 833--833
 []|\TU/TimesNewRoman(0)/m/n/10.95 Normal $\OMS/cmsy/m/n/10.95 !$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 715--715
+Underfull \hbox (badness 10000) in paragraph at lines 833--833
 []|\TU/TimesNewRoman(0)/m/n/10.95 Anxiety $\OMS/cmsy/m/n/10.95 !$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 715--715
+Underfull \hbox (badness 10000) in paragraph at lines 833--833
 []|\TU/TimesNewRoman(0)/m/n/10.95 Suicidal $\OMS/cmsy/m/n/10.95 !$
  []
 
 
-Underfull \hbox (badness 5908) in paragraph at lines 715--715
+Underfull \hbox (badness 5908) in paragraph at lines 833--833
 []|\TU/TimesNewRoman(0)/m/n/10.95 Depression $\OMS/cmsy/m/n/10.95 !$
  []
 
 
-Underfull \hbox (badness 2088) in paragraph at lines 715--715
+Underfull \hbox (badness 2088) in paragraph at lines 833--833
 []|\TU/TimesNewRoman(0)/m/n/10.95 Sai - ranh giới
  []
 
 
-Underfull \hbox (badness 5908) in paragraph at lines 715--715
+Underfull \hbox (badness 5908) in paragraph at lines 833--833
 []|\TU/TimesNewRoman(0)/m/n/10.95 Depression $\OMS/cmsy/m/n/10.95 !$
  []
 
 
-Underfull \hbox (badness 4024) in paragraph at lines 715--715
+Underfull \hbox (badness 4024) in paragraph at lines 833--833
 []|\TU/TimesNewRoman(0)/m/n/10.95 Sai - cảm xúc
  []
 
-[17] [18]
+[27] [28]
 Chương 6.
-[19
+[29
 
-] [20] [21
+] [30] [31
 
 ] (main.aux)
  ***********
@@ -1137,15 +1202,15 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 15356BDE1E501BEDD12FBD0B8C235F0F;7879.
+(rerunfilecheck)             Checksum: 66D20B94A0F36803A8110701D99706FA;7904.
  ) 
 Here is how much of TeX's memory you used:
- 27526 strings out of 402807
- 540922 string characters out of 5445135
- 1010139 words of memory out of 5000000
- 56018 multiletter control sequences out of 15000+600000
+ 27797 strings out of 402807
+ 549857 string characters out of 5445135
+ 1011452 words of memory out of 5000000
+ 56265 multiletter control sequences out of 15000+600000
  634506 words of font info for 94 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  102i,11n,107p,605b,508s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (24 pages).
+Output written on main.pdf (34 pages).

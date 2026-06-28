@@ -10,35 +10,35 @@
 \contentsline {section}{\numberline {2.1}Nguồn gốc dữ liệu}{4}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Phân bố nhãn}{4}{section.2.2}%
 \contentsline {section}{\numberline {2.3}Đặc trưng độ dài văn bản}{5}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Đặc trưng từ vựng và mức chồng lắp nhãn}{5}{section.2.4}%
-\contentsline {section}{\numberline {2.5}Vấn đề chất lượng dữ liệu}{5}{section.2.5}%
-\contentsline {section}{\numberline {2.6}Phân tích thủ công}{6}{section.2.6}%
-\contentsline {chapter}{\numberline {3}TIỀN XỬ LÝ VÀ BIỂU DIỄN ĐẶC TRƯNG}{7}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Chia dữ liệu và chống rò rỉ}{7}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Pipeline làm sạch văn bản}{7}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Biểu diễn đặc trưng cho Machine Learning}{8}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Biểu diễn cho Deep Learning}{8}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Biểu diễn cho BERT}{9}{section.3.5}%
-\contentsline {chapter}{\numberline {4}MÔ HÌNH VÀ PHƯƠNG PHÁP}{10}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Linear SVM}{10}{section.4.1}%
-\contentsline {section}{\numberline {4.2}LightGBM}{10}{section.4.2}%
-\contentsline {section}{\numberline {4.3}TextCNN}{11}{section.4.3}%
-\contentsline {section}{\numberline {4.4}BiLSTM kết hợp Attention}{11}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Fine-tuning BERT}{12}{section.4.5}%
-\contentsline {section}{\numberline {4.6}Ví dụ minh họa từ ngữ liệu}{12}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Demo NeuroDetect v2.0}{12}{section.4.7}%
-\contentsline {chapter}{\numberline {5}THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}{14}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Thiết lập thực nghiệm}{14}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Kết quả tổng quan}{15}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Kết quả theo từng lớp}{15}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Phân tích nhóm Machine Learning}{15}{section.5.4}%
-\contentsline {section}{\numberline {5.5}Phân tích nhóm Deep Learning}{16}{section.5.5}%
-\contentsline {section}{\numberline {5.6}Phân tích BERT}{16}{section.5.6}%
-\contentsline {section}{\numberline {5.7}Ma trận nhầm lẫn và lỗi điển hình}{16}{section.5.7}%
-\contentsline {section}{\numberline {5.8}Diễn giải một số mẫu đúng và sai}{17}{section.5.8}%
-\contentsline {section}{\numberline {5.9}Đánh đổi hiệu năng và tài nguyên}{18}{section.5.9}%
-\contentsline {chapter}{\numberline {6}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{19}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Kết luận}{19}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Hạn chế}{19}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Hướng phát triển}{19}{section.6.3}%
-\contentsline {section}{\numberline {6.4}Bài học rút ra}{20}{section.6.4}%
+\contentsline {section}{\numberline {2.4}Đặc trưng từ vựng và mức chồng lắp nhãn}{6}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Vấn đề chất lượng dữ liệu}{10}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Phân tích thủ công}{12}{section.2.6}%
+\contentsline {chapter}{\numberline {3}TIỀN XỬ LÝ VÀ BIỂU DIỄN ĐẶC TRƯNG}{14}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Chia dữ liệu và chống rò rỉ}{14}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Pipeline làm sạch văn bản}{15}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Biểu diễn đặc trưng cho Machine Learning}{16}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Biểu diễn cho Deep Learning}{17}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Biểu diễn cho BERT}{18}{section.3.5}%
+\contentsline {chapter}{\numberline {4}MÔ HÌNH VÀ PHƯƠNG PHÁP}{19}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Linear SVM}{19}{section.4.1}%
+\contentsline {section}{\numberline {4.2}LightGBM}{19}{section.4.2}%
+\contentsline {section}{\numberline {4.3}TextCNN}{19}{section.4.3}%
+\contentsline {section}{\numberline {4.4}BiLSTM kết hợp Attention}{20}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Fine-tuning BERT}{21}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Ví dụ minh họa từ ngữ liệu}{21}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Giao diện ứng dụng demo}{22}{section.4.7}%
+\contentsline {chapter}{\numberline {5}THỰC NGHIỆM VÀ PHÂN TÍCH KẾT QUẢ}{23}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Thiết lập thực nghiệm}{23}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Kết quả tổng quan}{24}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Kết quả theo từng lớp}{24}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Phân tích nhóm Machine Learning}{24}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Phân tích nhóm Deep Learning}{25}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Phân tích BERT}{25}{section.5.6}%
+\contentsline {section}{\numberline {5.7}Ma trận nhầm lẫn và lỗi điển hình}{26}{section.5.7}%
+\contentsline {section}{\numberline {5.8}Diễn giải một số mẫu đúng và sai}{27}{section.5.8}%
+\contentsline {section}{\numberline {5.9}Đánh đổi hiệu năng và tài nguyên}{28}{section.5.9}%
+\contentsline {chapter}{\numberline {6}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{29}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Kết luận}{29}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Hạn chế}{29}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Hướng phát triển}{29}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Bài học rút ra}{30}{section.6.4}%
