@@ -1,4 +1,12 @@
-let apiUrl = "https://unmoldered-patellate-angela.ngrok-free.dev/api/predict";
+let apiUrl = localStorage.getItem('apiUrl') || "https://unmoldered-patellate-angela.ngrok-free.dev/api/predict";
+
+// Initialize settings input box with current apiUrl
+document.addEventListener("DOMContentLoaded", () => {
+    const apiInput = document.getElementById('settingApiUrl');
+    if (apiInput) {
+        apiInput.value = apiUrl;
+    }
+});
 
 // Stronger, highly explicit test cases to force correct BERT predictions
 const testCases = {
@@ -144,7 +152,24 @@ function isProbablyEnglish(text) {
 
 // Fallback function to guarantee the demo works even if APIs are blocked
 async function fetchRedditData(subreddit, limit) {
-    // 1. Try fetching via our own FastAPI backend proxy (bypasses CORS and client rate limits)
+    // 1. Try fetching via our local proxy server (running on the same host)
+    const localRedditUrl = `/api/reddit?subreddit=${subreddit}&limit=${limit * 4}`;
+    try {
+        console.log("Attempting to fetch Reddit data via local proxy:", localRedditUrl);
+        const res = await fetch(localRedditUrl);
+        if (res.ok) {
+            const data = await res.json();
+            // If it returned data and no error key
+            if (data && data.data && data.data.children && data.data.children.length > 0 && !data.error) {
+                console.log("Successfully fetched Reddit data via local proxy.");
+                return data;
+            }
+        }
+    } catch (e) {
+        console.warn("Local Reddit proxy failed, trying backend/public proxies:", e);
+    }
+
+    // 2. Try fetching via our own FastAPI backend proxy (bypasses CORS and client rate limits)
     if (apiUrl && apiUrl.includes("/api/predict")) {
         const backendRedditUrl = apiUrl.replace("/api/predict", "/api/reddit") + `?subreddit=${subreddit}&limit=${limit * 4}`;
         try {
@@ -154,7 +179,7 @@ async function fetchRedditData(subreddit, limit) {
             });
             if (res.ok) {
                 const data = await res.json();
-                if (data && data.data && data.data.children && data.data.children.length > 0) {
+                if (data && data.data && data.data.children && data.data.children.length > 0 && !data.error) {
                     console.log("Successfully fetched Reddit data via backend proxy.");
                     return data;
                 }
@@ -234,20 +259,34 @@ let liveDistChart = null;
 let liveStats = { 'Normal': 0, 'Anxiety': 0, 'Depression': 0, 'Suicidal': 0 };
 
 // LIVE REDDIT MODERATION LOGIC
+let scanStatus = 'idle'; // 'idle', 'fetching', 'completed_fetch', 'displaying'
+let fetchedPosts = [];
+
 async function startLiveScan() {
+    if (scanStatus === 'fetching' || scanStatus === 'displaying') {
+        alert("A scan or results display is currently in progress!");
+        return;
+    }
+
     const subreddit = document.getElementById('subredditSelect').value;
     const postCount = parseInt(document.getElementById('postCountSelect').value);
     const feedContainer = document.getElementById('liveFeedContainer');
     const loading = document.getElementById('liveLoading');
+    const loadingText = document.getElementById('liveLoadingText');
+    const showResultsBtn = document.getElementById('showResultsBtn');
     const statsPanel = document.getElementById('liveStatsPanel');
     
-    feedContainer.innerHTML = '';
-    statsPanel.style.display = 'block';
-    loading.classList.remove('hidden');
+    // Clear feed container, hide stats panel, and show loading
+    feedContainer.innerHTML = '<div style="text-align: center; color: #555; padding: 40px; font-weight: bold; border: 4px dashed var(--border-color);">BACKGROUND FETCHING ACTIVE. YOU CAN SWITCH TABS SAFELY TO PRESENT.</div>';
+    statsPanel.style.display = 'none';
     
-    // Reset stats
-    liveStats = { 'Normal': 0, 'Anxiety': 0, 'Depression': 0, 'Suicidal': 0 };
-    updateLiveChart();
+    loading.classList.remove('hidden');
+    loadingText.innerText = "1. CONNECTING TO REDDIT API...";
+    loadingText.classList.add('blink');
+    showResultsBtn.classList.add('hidden');
+    
+    scanStatus = 'fetching';
+    fetchedPosts = [];
     
     try {
         const data = await fetchRedditData(subreddit, postCount);
@@ -258,60 +297,122 @@ async function startLiveScan() {
             return combinedText.trim().length > 0 && isProbablyEnglish(combinedText);
         }).slice(0, postCount);
         
-        loading.classList.add('hidden');
-        
         if (posts.length === 0) {
+            scanStatus = 'idle';
+            loading.classList.add('hidden');
             feedContainer.innerHTML = '<div style="text-align: center; color: #555; padding: 40px; font-weight: bold; border: 4px dashed var(--border-color);">NO TEXT POSTS FOUND.</div>';
             return;
         }
 
-        for (const post of posts) {
-            const textToAnalyze = (post.title + " " + post.selftext).substring(0, 500); // truncate for speed
-            
-            // Create UI Box
-            const postId = `post_${post.id}`;
-            const box = document.createElement('div');
-            box.className = 'brutal-box';
-            box.id = postId;
-            box.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
-                    <div>
-                        <h4 style="font-weight: 900; margin-bottom: 5px; font-size: 1.1rem;">${post.title}</h4>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <p style="color: #555; font-size: 0.9rem; font-weight: 700;">u/${post.author} • Score: ${post.score}</p>
-                            ${post.permalink ? `<a href="https://www.reddit.com${post.permalink}" target="_blank" style="font-size: 0.8rem; background: #111; color: #fff; padding: 3px 8px; text-decoration: none; font-weight: bold; border-radius: 3px;">🔗 View on Reddit</a>` : ''}
-                        </div>
-                    </div>
-                    <div id="badge_${post.id}" style="padding: 5px 10px; border: 3px solid var(--border-color); font-weight: 900; background: #eee;">ANALYZING...</div>
-                </div>
-                <p id="content_${post.id}" style="font-weight: 500; font-size: 1rem; line-height: 1.5; color: #111;">${post.selftext.substring(0, 300)}${post.selftext.length > 300 ? '...' : ''}</p>
-            `;
-            feedContainer.appendChild(box);
-            
-            // Run BERT Analysis
-            try {
-                const apiRes = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-                    body: JSON.stringify({ text: textToAnalyze, model: 'BERT' })
-                });
-                
-                if (apiRes.ok) {
-                    const apiData = await apiRes.json();
-                    updateLivePostUI(post.id, apiData.label, apiData.confidence);
-                } else {
-                    document.getElementById(`badge_${post.id}`).innerText = "API ERROR";
-                }
-            } catch (e) {
-                document.getElementById(`badge_${post.id}`).innerText = "API FAILED";
-            }
-        }
+        fetchedPosts = posts;
+        
+        // Fetch complete, wait for user to click Show Results
+        scanStatus = 'completed_fetch';
+        loadingText.innerText = `✓ FETCH COMPLETE (${posts.length} POSTS FOUND)`;
+        loadingText.classList.remove('blink');
+        showResultsBtn.classList.remove('hidden');
         
     } catch (err) {
         console.error(err);
+        scanStatus = 'idle';
         loading.classList.add('hidden');
         feedContainer.innerHTML = '<div style="text-align: center; color: #ff3c38; padding: 40px; font-weight: bold; border: 4px dashed var(--border-color);">FAILED TO FETCH REDDIT API.</div>';
     }
+}
+
+async function displayLiveResults() {
+    if (scanStatus !== 'completed_fetch') return;
+    
+    scanStatus = 'displaying';
+    
+    const feedContainer = document.getElementById('liveFeedContainer');
+    const loading = document.getElementById('liveLoading');
+    const statsPanel = document.getElementById('liveStatsPanel');
+    
+    loading.classList.add('hidden');
+    feedContainer.innerHTML = '';
+    statsPanel.style.display = 'block';
+    
+    // Reset stats again for display counter increment effect
+    liveStats = { 'Normal': 0, 'Anxiety': 0, 'Depression': 0, 'Suicidal': 0 };
+    updateLiveChart();
+    
+    for (const post of fetchedPosts) {
+        // Create UI Box
+        const postId = `post_${post.id}`;
+        const box = document.createElement('div');
+        box.className = 'brutal-box';
+        box.id = postId;
+        box.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                <div>
+                    <h4 style="font-weight: 900; margin-bottom: 5px; font-size: 1.1rem;">${post.title}</h4>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <p style="color: #555; font-size: 0.9rem; font-weight: 700;">u/${post.author} • Score: ${post.score}</p>
+                        ${post.permalink ? (
+                            post.permalink.startsWith("http")
+                            ? `<a href="${post.permalink}" target="_blank" style="font-size: 0.8rem; background: #111; color: #fff; padding: 3px 8px; text-decoration: none; font-weight: bold; border-radius: 3px;">🔗 View Post</a>`
+                            : `<a href="https://www.reddit.com${post.permalink}" target="_blank" style="font-size: 0.8rem; background: #111; color: #fff; padding: 3px 8px; text-decoration: none; font-weight: bold; border-radius: 3px;">🔗 View on Reddit</a>`
+                        ) : ''}
+                    </div>
+                </div>
+                <div id="badge_${post.id}" style="padding: 5px 10px; border: 3px solid var(--border-color); font-weight: 900; background: #eee;">ANALYZING...</div>
+            </div>
+            <p id="content_${post.id}" style="font-weight: 500; font-size: 1rem; line-height: 1.5; color: #111;">${post.selftext.substring(0, 300)}${post.selftext.length > 300 ? '...' : ''}</p>
+        `;
+        feedContainer.appendChild(box);
+        
+        // Smooth scroll new post box and main-content container
+        box.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) {
+            mainContent.scrollTo({ top: mainContent.scrollHeight, behavior: 'smooth' });
+        }
+        
+        // Wait 150ms before initiating BERT request
+        await new Promise(resolve => setTimeout(resolve, 150));
+        
+        const textToAnalyze = (post.title + " " + post.selftext).substring(0, 500); // truncate for speed
+        
+        // Run BERT Analysis LIVE for each post
+        let label = 'Normal';
+        let confidence = 0.5;
+        let status = 'SUCCESS';
+        
+        try {
+            const apiRes = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+                body: JSON.stringify({ text: textToAnalyze, model: 'BERT' })
+            });
+            
+            if (apiRes.ok) {
+                const apiData = await apiRes.json();
+                label = apiData.label;
+                confidence = apiData.confidence;
+            } else {
+                status = 'ERROR';
+            }
+        } catch (e) {
+            status = 'FAILED';
+        }
+        
+        if (status === 'SUCCESS') {
+            updateLivePostUI(post.id, label, confidence);
+        } else {
+            document.getElementById(`badge_${post.id}`).innerText = `API ${status}`;
+        }
+        
+        // Smooth scroll again after update to ensure everything fits
+        if (mainContent) {
+            mainContent.scrollTo({ top: mainContent.scrollHeight, behavior: 'smooth' });
+        }
+        
+        // Short pause between posts to let the audience digest (200ms)
+        await new Promise(resolve => setTimeout(resolve, 200));
+    }
+    
+    scanStatus = 'idle';
 }
 
 function updateLivePostUI(postId, label, confidence) {
@@ -385,6 +486,7 @@ function updateLiveChart() {
 // SETTINGS LOGIC
 function saveSettings() {
     apiUrl = document.getElementById('settingApiUrl').value;
+    localStorage.setItem('apiUrl', apiUrl);
     const msg = document.getElementById('saveMsg');
     msg.classList.remove('hidden');
     setTimeout(() => msg.classList.add('hidden'), 3000);

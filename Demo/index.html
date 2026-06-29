@@ -88,8 +88,9 @@
                         </div>
                     </div>
                     
-                    <div id="liveLoading" class="hidden" style="text-align: center; padding: 30px;">
-                        <h2 class="blink" style="color: var(--accent-red);">CONNECTING TO REDDIT API & RUNNING BERT...</h2>
+                    <div id="liveLoading" class="hidden" style="text-align: center; padding: 30px; border: 4px solid var(--border-color); background: #fff; margin-top: 20px; box-shadow: 4px 4px 0px var(--border-color);">
+                        <h2 id="liveLoadingText" class="blink" style="color: var(--accent-red); font-weight: 900; margin: 0;">CONNECTING TO REDDIT API...</h2>
+                        <button id="showResultsBtn" class="brutal-btn hidden" style="margin: 20px auto 0 auto; display: block; background: var(--accent-green); font-size: 1.2rem; padding: 15px 30px;" onclick="displayLiveResults()">SHOW RESULTS</button>
                     </div>
 
                     <div style="display: flex; gap: 30px;">
